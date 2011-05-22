@@ -1,4 +1,4 @@
-/* CV: sandobox constructor */
+/* CV: sandbox constructor */
 function CV() {
   var args = Array.prototype.slice.call(arguments),
       callback = args.pop(),
@@ -143,6 +143,7 @@ CV.modules.features2d = function(self) {
 /* utilities module */
 /* image histogram */
 CV.modules.histogram = function(self) {
+  // draw histogram on the canvas
   self.drawHistogram = function(bins, context, style) {
     var h = context.canvas.height,
         max = self.getMax(bins),
@@ -161,6 +162,7 @@ CV.modules.histogram = function(self) {
       context.closePath();
     }
   };
+  // calculate histogram intersection
   self.intersection = function(hist1, hist2) {
     if(hist1.length != hist2.length) {
       throw new Error('invalid histogram pair');
