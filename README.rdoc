@@ -1,0 +1,9 @@
+= jslib
+
+== description
+
+My JavaScript Practice
+
+== note:
+
+includes classical and modern interface
