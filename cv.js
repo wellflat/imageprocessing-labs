@@ -1,4 +1,4 @@
-/* CV: sandbox constructor */
+/* CV: Sandbox constructor */
 function CV() {
   var args = Array.prototype.slice.call(arguments),
       callback = args.pop(),
@@ -44,7 +44,7 @@ CV.modules.core = function(self) {
   };
 };
 
-/* filter module */
+/* image filter module */
 CV.modules.filter = function(self) {
   // convolution filter
   self.convolution = function(kernel, divisor, bias) {
@@ -81,6 +81,31 @@ CV.modules.filter = function(self) {
     for(var l=0; l<len; l++) {
       var value = dstData[l];
       dstData[l] = value<0 ? 0 : value>255 ? 255 : value; 
+    }
+    return dstImg;
+  };
+  // jitter filter
+  self.jitter = function(amount) {
+    var p = self.constructor.prototype,
+        w = p.bitmapData.width,
+        h = p.bitmapData.height,
+        srcData = p.bitmapData.data,
+        dstImg = p.ctx.createImageData(w, h),
+        dstData = dstImg.data,
+        len = dstData.length,
+        dx, dy, step, i, k;
+    for(var y=0; y<h; y++) {
+      step = y*w;
+      for(var x=0; x<w; x++) {
+        dx = x + Math.round((Math.random() - 0.5)*amount);
+        dy = y + Math.round((Math.random() - 0.5)*amount);
+        i = (step + x) << 2;
+        k = (w*dy + dx) << 2;
+        dstData[i] = srcData[k];
+        dstData[i + 1] = srcData[k + 1];
+        dstData[i + 2] = srcData[k + 2];
+        dstData[i + 3] = 255;
+      }
     }
     return dstImg;
   };
