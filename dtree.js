@@ -194,25 +194,26 @@ var DecisionTreeTracer = (function() {
       // draw on the canvas
       _draw = function(tree, context) {
         _init(tree, context);
-        var w = _getWidth(tree)*100;
+        var w = _getWidth(tree)*80;
         _drawNode(tree, w/2, 20);
       },
       _drawNode = function(tree, x, y) {
         if(tree.terminal == null) {
-          var lw = _getWidth(tree.left)*100,
-              rw = _getWidth(tree.right)*100,
+          var scale = 80,
+              lw = _getWidth(tree.left)*scale,
+              rw = _getWidth(tree.right)*scale,
               ls = x - (lw + rw)/2,
               rs = x + (lw + rw)/2;
           _context.beginPath();
           _context.moveTo(x, y);
-          _context.lineTo(ls + lw/2, y + 100);
+          _context.lineTo(ls + lw/2, y + scale);
           _context.moveTo(x, y);
-          _context.lineTo(rs - rw/2, y + 100);
+          _context.lineTo(rs - rw/2, y + scale);
           _context.fillText(tree.attr + ':' + tree.value, x, y);
           _context.closePath();
           _context.stroke();
-          _drawNode(tree.left, ls + lw/2, y + 100)
-          _drawNode(tree.right, rs - rw/2, y + 100);
+          _drawNode(tree.left, ls + lw/2, y + scale)
+          _drawNode(tree.right, rs - rw/2, y + scale);
         }else {
           _context.fillStyle = '#00cc66';
           var txt = '';
