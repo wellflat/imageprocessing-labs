@@ -19,7 +19,7 @@ Node.prototype = {
 /* Builds the Decision-Tree */
 var DecisionTree = (function() {
   var _records = 0,
-      _devideSets = function(records, attr, value) {
+      _divideSets = function(records, attr, value) {
         var splitFunc,
             set1 = [], set2 = [],
             len = records.length;
@@ -84,7 +84,7 @@ var DecisionTree = (function() {
             attrValue[records[i][attr]] = 1;
           }
           for(var value in attrValue) {
-            subSets = _devideSets(records, attr, value);
+            subSets = _divideSets(records, attr, value);
             p = subSets[0].length/recordNum;
             gain = entropy - p*_calcEntropy(subSets[0]) -
                    (1 - p)*_calcEntropy(subSets[1]);
