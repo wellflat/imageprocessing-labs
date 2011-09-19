@@ -1,3 +1,7 @@
+/**
+ * Image Processing & Computer Vision Modules using Sandbox Pattern
+ */
+
 /* CV: Sandbox constructor */
 function CV() {
   var args = Array.prototype.slice.call(arguments),
@@ -80,7 +84,7 @@ CV.modules.filter = function(self) {
     }
     for(var l=0; l<len; l++) {
       var value = dstData[l];
-      dstData[l] = value<0 ? 0 : value>255 ? 255 : value; 
+      dstData[l] = value<0 ? 0 : value>255 ? 255 : value;
     }
     return dstImg;
   };
@@ -129,7 +133,7 @@ CV.modules.features2d = function(self) {
         features = [],
         c, i, j, l, step, kstep,
         cmp = 0;
-    
+
     // mask pattern, feature vector intialize
     for(var k=0; k<len; k++) {
       mask[k] = parseInt(mask[k], 2);

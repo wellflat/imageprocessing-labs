@@ -1,4 +1,8 @@
 /**
+ * Image Processing Modules
+ */
+
+/**
  * Class.create(object)
  * returns a function that will fire its own initialize method.
  */
@@ -85,7 +89,7 @@ var ConvolutionFilter = Class.create({
     }
     for(var l=0; l<len; l++) {
       var value = dstData[l];
-      dstData[l] = value<0 ? 0 : value>255 ? 255 : value; 
+      dstData[l] = value<0 ? 0 : value>255 ? 255 : value;
     }
   }
 });

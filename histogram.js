@@ -1,3 +1,6 @@
+/**
+ * Image Histogram Caluculator using Web Worker API
+ */
 var Class = {
   create : function() {
     var properties = arguments[0];
