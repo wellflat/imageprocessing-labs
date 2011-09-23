@@ -1,5 +1,5 @@
 /**
- * Image Processing & Computer Vision Modules using Sandbox Pattern
+ * Computer Vision Modules using Sandbox Pattern
  */
 
 /* CV: Sandbox constructor */
