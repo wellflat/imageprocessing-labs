@@ -7,7 +7,7 @@ stereo = (function() {
       right = new Image(),
       data = [null, null],  // CanvasPixelArray pair
       state = {},  // parameters for block matching
-      worker = new Worker('libs/js/stereo_core.js'),
+      worker = null,
       /* load stereo pair images */
       _load = function(leftSource, rightSource) {
         ctx = document.createElement('canvas').getContext('2d');
@@ -46,8 +46,10 @@ stereo = (function() {
         }
         context.putImageData(img, 0, 0);
       },
-      /* find stereo correspondence using block matching */
+      /* find stereo correspondence using worker */
       _find = function(preset, wSize, nDisparities) {
+        if(worker) worker.terminate();
+        worker = new Worker('libs/js/stereo_core.js');
         _validate();
         _createState(preset);
         if(wSize) state.SADWindowSize = wSize;
