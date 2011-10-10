@@ -1,13 +1,13 @@
 /**
  * Stereo Matching module using Web Workers
  */
-stereo = (function() {
+var stereo = (function() {
   var ctx = null,
       left = new Image(),
       right = new Image(),
       data = [null, null],  // CanvasPixelArray pair
       state = {},  // parameters for block matching
-      worker = null,
+      worker = new Worker('libs/js/stereo_core.js'),
       /* load stereo pair images */
       _load = function(leftSource, rightSource) {
         ctx = document.createElement('canvas').getContext('2d');
@@ -33,11 +33,10 @@ stereo = (function() {
         right.addEventListener('error', function() {
           alert('can\'t load right image');
         }, false);
-
       },
       /* draw disparity map on the canvas */
       _draw = function(data, context) {
-        var img = context.createImageData(data.width, data.height),
+        var img = context.getImageData(0, 0, data.width, data.height),
             pixels = img.data,
             disparity = data.disparity,
             len = disparity.length;
@@ -48,8 +47,6 @@ stereo = (function() {
       },
       /* find stereo correspondence using worker */
       _find = function(preset, wSize, nDisparities) {
-        if(worker) worker.terminate();
-        worker = new Worker('libs/js/stereo_core.js');
         _validate();
         _createState(preset);
         if(wSize) state.SADWindowSize = wSize;
@@ -72,7 +69,6 @@ stereo = (function() {
         default:
           state.minDisparity = 0;
           state.numberOfDisparities = 10;
-          //state.SADWindowSize = 7;
           state.SADWindowSize = 5;
           state.textureThreshold = 1500;
           break;
