@@ -1,11 +1,11 @@
 /**
- * Mobius Strip Maker
+ * Klein's Bottle Maker
  */
-var MobiusStrip = (function() {
+var KleinBottle = (function() {
   var _context = null,
       _width = null,
       _height = null,
-      _scale = 60,
+      _scale = 6,
       _fov = 250,
       _points = [],
       _numPoints = 0,
@@ -42,18 +42,23 @@ var MobiusStrip = (function() {
         grad.addColorStop(0.9, 'rgb(48, 48, 48)');
         grad.addColorStop(1, 'rgb(64, 64, 64)');
         _context.fillStyle = grad;
-        _context.strokeStyle = 'rgb(0, 255, 160)';
+        _context.strokeStyle = 'rgb(0, 128, 255)';
         _context.fillRect(0, 0, _width, _height);
       },
       _setPoints = function(num) {
-        var s, t, k, n = 0, point;
+        var x, y, u, v, r, n = 0, point;
         for(var i=0; i<=2*Math.PI*num; i++) {
-          for(var j=-num/8; j<=num/8; j++) {
-            s = i/num; t = j/10;
-            k = 1 + t*Math.cos(s/2);
-            point = [_scale*k*Math.cos(s),
-                     _scale*k*Math.sin(s),
-                     _scale*t*Math.sin(s/2)];
+          for(var j=0; j<=2*Math.PI*4.8; j++) {
+            u = i/num; v = j/4.8;
+            r = 4*(1 - Math.cos(u)/2);
+            if(u<Math.PI) {
+              x = 6*Math.cos(u)*(1 + Math.sin(u)) + r*Math.cos(u)*Math.cos(v);
+              y = 16*Math.sin(u) + r*Math.sin(u)*Math.cos(v);
+            } else {
+              x = 6*Math.cos(u)*(1 + Math.sin(u)) + r*Math.cos(v + Math.PI);
+              y = 16*Math.sin(u);
+            }
+            point = [_scale*x, _scale*y, _scale*r*Math.sin(v)];
             _points.push(point);
             n++;
           }
@@ -115,7 +120,6 @@ var MobiusStrip = (function() {
         point3d[0] = x;
         point3d[1] = y;
       };
-
   // public APIs
   return {
     init: _init,
