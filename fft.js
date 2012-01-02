@@ -319,7 +319,7 @@ var SpectrumViewer = (function() {
         _data = _img.data;
       },
       // render FFT power spectrum on the Canvas
-      _render = function(re, im) {
+      _render = function(re, im, islog) {
         var val = 0,
             i = 0,
             p = 0,
@@ -328,7 +328,11 @@ var SpectrumViewer = (function() {
             imax = 0.0,
             n2 = _n*_n;
         for(var i=0; i<n2; i++) {
-          spectrum[i] = Math.log(Math.sqrt(re[i]*re[i] + im[i]*im[i]));
+          if(islog){
+            spectrum[i] = Math.log(Math.sqrt(re[i]*re[i] + im[i]*im[i]));
+          } else {
+            spectrum[i] = Math.sqrt(re[i]*re[i] + im[i]*im[i]);
+          }
           if(spectrum[i] > max) {
             max = spectrum[i];
           }
