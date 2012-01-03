@@ -7,7 +7,7 @@ var stereo = (function() {
       right = new Image(),
       data = [null, null],  // CanvasPixelArray pair
       state = {},  // parameters for block matching
-      worker = new Worker('libs/js/stereo_core.js'),
+      worker = new Worker('libs/js/stereo-core.js'),
       /* load stereo pair images */
       _load = function(leftSource, rightSource) {
         ctx = document.createElement('canvas').getContext('2d');

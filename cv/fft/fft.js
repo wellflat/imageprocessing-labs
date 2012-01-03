@@ -8,7 +8,7 @@ var FFT = (function() {
       _cstb = [],
       // public methods
       _init = function(n) {
-        if(n != 0 && (n & (n - 1)) == 0) {
+        if(n !== 0 && (n & (n - 1)) === 0) {
           _n = n;
           _makeBitReversal();
           _makeCosSinTable();
@@ -168,7 +168,7 @@ var FFT = (function() {
           _cstb[i] = s;
           _cstb[n4 - i] = c;
         }
-        if(n8 != 0) {
+        if(n8 !== 0) {
           _cstb[n8] = Math.sqrt(0.5);
         }
         for(var j=0; j<n4; j++) {
