@@ -27,13 +27,13 @@ asyncTest("FFT module tests", function() {
       }
       var re2 = re.concat(),
           im2 = im.concat(),
-          step = 100,
+          sample = 100,
           diff = 0.0,
           error = 1.0e-12;
       // 1D-FFT/IFFT
       FFT.fft1d(re, im);
       FFT.ifft1d(re, im);
-      for(var j=0; j<step*step; j+=step) {
+      for(var j=0; j<sample*sample; j+=sample) {
         diff = re[j] - re2[j];
         diff = diff > 0 ? diff : -diff;
         ok(diff < error, "fft1d -> ifft1d, Re error: " + diff);
@@ -46,7 +46,7 @@ asyncTest("FFT module tests", function() {
       im = im2.concat();
       FFT.fft2d(re, im);
       FFT.ifft2d(re, im);
-      for(var j=0; j<step*step; j+=step) {
+      for(var j=0; j<sample*sample; j+=sample) {
         diff = re[j] - re2[j];
         diff = diff > 0 ? diff : -diff;
         ok(diff < error, "fft2d -> ifft2d, Re error: " + diff);
