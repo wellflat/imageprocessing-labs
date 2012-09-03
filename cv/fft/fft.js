@@ -1,13 +1,13 @@
 /**
- * Fast Fourier Transform
+ * Fast Fourier Transform module
  * 1D-FFT/IFFT, 2D-FFT/IFFT (radix-2)
  */
 (function() {
-  var FFT;  // top-level namaspace
+  var FFT;           // top-level namespace
   var _root = this;  // reference to 'window' or 'global'
 
   if(typeof exports !== 'undefined') {
-    FFT = exports;  // for CommonJS
+    FFT = exports;   // for CommonJS
   } else {
     FFT = _root.FFT = {};
   }
@@ -24,25 +24,25 @@
   var _n = 0,          // order
       _bitrev = null,  // bit reversal table
       _cstb = null;    // sin/cos table
-  var Core = {
+  var core = {
     init : function(n) {
       if(n !== 0 && (n & (n - 1)) === 0) {
         _n = n;
-        Core.setVariables();
-        Core.makeBitReversal();
-        Core.makeCosSinTable();
+        core._setVariables();
+        core._makeBitReversal();
+        core._makeCosSinTable();
       } else {
         throw new Error("init: radix-2 required");
       }
     },
     // 1D-FFT
     fft1d : function(re, im) {
-      Core.fft(re, im, 1);
+      core.fft(re, im, 1);
     },
     // 1D-IFFT
     ifft1d : function(re, im) {
       var n = 1/_n;
-      Core.fft(re, im, -1);
+      core.fft(re, im, -1);
       for(var i=0; i<_n; i++) {
         re[i] *= n;
         im[i] *= n;
@@ -60,7 +60,7 @@
           tre[x1] = re[x1 + i];
           tim[x1] = im[x1 + i];
         }
-        Core.fft1d(tre, tim);
+        core.fft1d(tre, tim);
         for(var x2=0; x2<_n; x2++) {
           re[x2 + i] = tre[x2];
           im[x2 + i] = tim[x2];
@@ -73,7 +73,7 @@
           tre[y1] = re[i];
           tim[y1] = im[i];
         }
-        Core.fft1d(tre, tim);
+        core.fft1d(tre, tim);
         for(var y2=0; y2<_n; y2++) {
           i = x + y2*_n;
           re[i] = tre[y2];
@@ -93,7 +93,7 @@
           tre[x1] = re[x1 + i];
           tim[x1] = im[x1 + i];
         }
-        Core.ifft1d(tre, tim);
+        core.ifft1d(tre, tim);
         for(var x2=0; x2<_n; x2++) {
           re[x2 + i] = tre[x2];
           im[x2 + i] = tim[x2];
@@ -106,7 +106,7 @@
           tre[y1] = re[i];
           tim[y1] = im[i];
         }
-        Core.ifft1d(tre, tim);
+        core.ifft1d(tre, tim);
         for(var y2=0; y2<_n; y2++) {
           i = x + y2*_n;
           re[i] = tre[y2];
@@ -151,7 +151,7 @@
       }
     },
     // set variables
-    setVariables : function() {
+    _setVariables : function() {
       _bitrev = [];
       _cstb = [];
       // if(typeof Uint8Array !== 'undefined') {
@@ -166,7 +166,7 @@
       // }
     },
     // make bit reversal table
-    makeBitReversal : function() {
+    _makeBitReversal : function() {
       var i = 0,
           j = 0,
           k = 0;
@@ -182,7 +182,7 @@
       }
     },
     // make trigonometiric function table
-    makeCosSinTable : function() {
+    _makeCosSinTable : function() {
       var n2 = _n >> 1,
           n4 = _n >> 2,
           n8 = _n >> 3,
@@ -212,11 +212,11 @@
       }
     }
   };
-  // aliases (public methods)
+  // aliases (public APIs)
   var apis = ['init', 'fft1d', 'ifft1d', 'fft2d', 'ifft2d'];
   for(var i=0; i<apis.length; i++) {
-    FFT[apis[i]] = Core[apis[i]];
+    FFT[apis[i]] = core[apis[i]];
   }
-  FFT.fft = Core.fft1d;
-  FFT.ifft = Core.ifft1d;
+  FFT.fft = core.fft1d;
+  FFT.ifft = core.ifft1d;
 }).call(this);
