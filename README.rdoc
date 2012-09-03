@@ -6,7 +6,7 @@ My JavaScript Practice
 
 == note:
 
-includes classical and modern interface
+computer vision, graphics and image processing on the canvas
 
 == license:
 
