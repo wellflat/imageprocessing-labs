@@ -6,6 +6,7 @@
 see also [blog entry][entry]
 
 ### example
+2D-FFT/IFFT, Frequency Filtering
 [![fft2d](http://rest-term.com/labs/repos/js/cv/fft/fftfilter.jpg)](http://rest-term.com/labs/html5/fft.html)
 
 ## usage
