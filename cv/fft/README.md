@@ -2,8 +2,11 @@
 
 ## description
 
-1D-FFT/IFFT, 2D-FFT/IFFT module  
+1D-FFT/IFFT, 2D-FFT/IFFT, Frequency Filtering module  
 see also [blog entry][entry]
+
+### example
+[![fft2d](http://rest-term.com/labs/repos/js/cv/fft/fftfilter.jpg)](http://rest-term.com/labs/html5/fft.html)
 
 ## usage
 ### 1D-FFT/IFFT
@@ -33,7 +36,7 @@ console.log("N: (Source) (FFT) (IFFT)");
 console.log(out);
 ```
 
-### 2D-FFT/IFFT, Frequency Filtering(HPF/LPF/BPF)
+### 2D-FFT/IFFT, Frequency Filtering(HighPass/LowPass/BandPass)
 
 ```js
 var spectrum = document.querySelector('#Spectrum').getContext('2d'),
@@ -69,9 +72,9 @@ image.addEventListener('load', function(e) {
   // High Pass Filter
   FrequencyFilter.HPF(re, im, radius);
   // Low Pass Filter
-  //FrequencyFilter.LPF(re, im, radius);
+  FrequencyFilter.LPF(re, im, radius);
   // Band Path Filter
-  //FrequencyFilter.BPF(re, im, radius, radius/2);
+  FrequencyFilter.BPF(re, im, radius, radius/2);
   // render spectrum
   SpectrumViewer.render(re, im);
   // swap quadrant
