@@ -6,7 +6,6 @@
 see also [blog entry][entry]
 
 ### example
-2D-FFT/IFFT, Frequency Filtering
 [![fft2d](http://rest-term.com/labs/repos/js/cv/fft/fftfilter.jpg)](http://rest-term.com/labs/html5/fft.html)
 
 ## usage
@@ -37,9 +36,10 @@ console.log("N: (Source) (FFT) (IFFT)");
 console.log(out);
 ```
 
-### 2D-FFT/IFFT, Frequency Filtering(HighPass/LowPass/BandPass)
+### 2D-FFT/IFFT, Frequency Filtering (High-Pass/Low-Pass/Band-Pass)
 
 ```js
+// for HTML5 Canvas
 var spectrum = document.querySelector('#Spectrum').getContext('2d'),
     result = document.querySelector('#Result').getContext('2d'),
     image = new Image();
@@ -90,6 +90,7 @@ image.addEventListener('load', function(e) {
       data[p] = data[p + 1] = data[p + 2] = val;
     }
   }
+  // put result image on the canvas
   result.putImageData(src, 0, 0);
 }, false);
 ```
