@@ -2,11 +2,11 @@
 
 ## description
 
-1D-FFT/IFFT, 2D-FFT/IFFT, Frequency Filtering module  
+1D-FFT/IFFT, 2D-FFT/IFFT, Frequency Filtering
 see also [blog entry][entry]
 
 ### example
-[![fft2d](http://rest-term.com/labs/repos/js/cv/fft/fftfilter.jpg)](http://rest-term.com/labs/html5/fft.html)
+[![2d_fft](http://rest-term.com/labs/repos/images/fft_filter.jpg)](http://rest-term.com/labs/html5/fft.html)
 
 ## usage
 ### 1D-FFT/IFFT
