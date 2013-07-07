@@ -5,9 +5,7 @@
 Drawing 3D shapes samples
 
 ### example
-[![Heart Surface](http://rest-term.com/labs/repos/images/3dshape_drawing.jpg)](http://rest-term.com/labs/html5/heart.html)
-[![Mobius Strip](http://rest-term.com/labs/repos/images/3dshape_drawing.jpg)](http://rest-term.com/labs/html5/mobius.html)
-[![Klein Bottle](http://rest-term.com/labs/repos/images/3dshape_drawing.jpg)](http://rest-term.com/labs/html5/klein.html)
+[![Mobius Strip](http://rest-term.com/labs/repos/images/3dshape_drawing.png)](http://rest-term.com/labs/html5/mobius.html)
 
 license
 ----------
