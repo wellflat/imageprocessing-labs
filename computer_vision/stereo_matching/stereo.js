@@ -25,7 +25,7 @@
       right = new Image(),
       data = [null, null],
       state = {},
-      worker = new Worker('libs/js/stereo-core.js');
+      worker = new Worker('lib/js/stereo-core.js');
   var core = {
     /* load stereo pair images */
     _load : function(leftSource, rightSource) {
