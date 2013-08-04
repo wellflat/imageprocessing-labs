@@ -91,7 +91,6 @@
           threashold = 128,
           terminate = [],
           step, l, m;
-      var log = {};
       // validation
       if(!(parseInt(iteration) && parseInt(offsetX) && parseInt(offsetY))) {
         throw TypeError('invalid parameter type');
@@ -141,9 +140,9 @@
                       gq[c] = srcData[naddr[n] + c];
                       sumfstar[c] += fq[c];
                       subf[c] = fp[c] - fq[c];
-                      subf[c] = subf[c] < 0 ? -subf[c] : subf[c];
+                      subf[c] = subf[c] > 0 ? subf[c] : -subf[c];
                       subg[c] = gp[c] - gq[c];
-                      subg[c] = subg[c] < 0 ? -subg[c] : subg[c];
+                      subg[c] = subg[c] > 0 ? subg[c] : -subg[c];
                       if(subf[c] > subg[c]) {
                         sumvq[c] += subf[c];
                       } else {
@@ -156,12 +155,11 @@
               for(c=0; c<3; c++) {
                 fp[c] = (sumf[c] + sumfstar[c] + sumvq[c])*0.25; // division 4
                 error = Math.floor(fp[c] - blendData[l + m + c]);
-                error = error < 0 ? -error : error;
-                if(terminate[c] && error >
-                   EPS*(1 + (fp[c] < 0 ? -fp[c] : fp[c]))) {
+                error = error > 0 ? error : -error;
+                if(terminate[c] && error > EPS*(1 + (fp[c] > 0 ? fp[c] : -fp[c]))) {
                   terminate[c] = false;
                 }
-                blendData[l + m + c] = fp[c] > 255 ? 255 : fp[c] < 0 ? 0 : fp[c];
+                blendData[l + m + c] = fp[c];
               }
             } // end mask
           } // end x loop
