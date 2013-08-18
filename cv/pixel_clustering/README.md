@@ -16,9 +16,9 @@ var ctx = document.querySelector('#Canvas').getContext('2d');
 // source image, callback function
 PixelCluster.load(srcImgName, function() {
   // performs k-means on a set of observation vectors forming k clusters
-  PixelCluster.perform(division, k, function(data) {
-    // render result to canvas
-    PixelCluster.render(ctx, data, division);
+  PixelCluster.perform(division, k, function(result) {
+    // render the result to canvas
+    PixelCluster.render(ctx, division, result);
   });
 });
 ```

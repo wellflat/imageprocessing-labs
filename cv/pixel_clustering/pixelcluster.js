@@ -38,6 +38,10 @@
     },
     perform: function(division, clusterCount, onComplete, onError) {
       var features = core.extractFeatures(division);
+      /*
+      var codebook = core.kmeans(features, clusterCount);
+      return core.vq(features, codebook["centroids"], codebook["indices"]);
+      */
       var message = {"samples":features, "clusterCount":clusterCount};
       worker.postMessage(message);
       worker.addEventListener('message', function(e) {
@@ -173,7 +177,7 @@
       }
       return samples;
     },
-    render: function(context, features, division) {
+    render: function(context, division, features) {
       var w = imgData.width,
           h = imgData.height,
           data = imgData.data,
