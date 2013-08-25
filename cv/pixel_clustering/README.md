@@ -2,7 +2,7 @@
 
 ## description
 
-Pixel Clustering using k-means algorithm
+Pixel Clustering using k-means++ algorithm
 
 see also [blog entry][entry]
 
@@ -16,7 +16,10 @@ var ctx = document.querySelector('#Canvas').getContext('2d');
 // source image, callback function
 PixelCluster.load(srcImgName, function() {
   // performs k-means on a set of observation vectors forming k clusters
-  PixelCluster.perform(division, k, function(result) {
+  var division = 100;
+  var k = 4;
+  var method = PixelCluster.KMEANS_PP;  // KMEANS_PP or KMEANS_RANDOM
+  PixelCluster.perform(division, k, method, function(result) {
     // render the result to canvas
     PixelCluster.render(ctx, division, result);
   });
