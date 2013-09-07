@@ -13,13 +13,15 @@
   }
 
   var ctx = null,
-      image = new Image(),
+      image = null,
       imgData = null,
       worker = new Worker('lib/js/kmeans.js');
   
   var core = {
     load: function(fileName, onComplete, onError) {
       ctx = document.createElement('canvas').getContext('2d');
+      image = new Image();
+      imgData = null;
       image.addEventListener('load', function(e) {
         var img = e.target;
         ctx.canvas.width = img.width;
@@ -27,7 +29,7 @@
         ctx.drawImage(img, 0, 0);
         imgData = ctx.getImageData(0, 0, img.width, img.height);
         if(typeof onComplete === 'function') {
-          onComplete(imgData);
+          onComplete(imgData, new Date());
         }
       }, false);
       image.addEventListener('error', function() {
@@ -39,27 +41,27 @@
     },
     perform: function(division, ncluster, method, onComplete, onError) {
       var features = core.extractFeatures(division);
-      /*
-      var codebook = core.kmeans(features, ncluster, method);
-      var result =  core.vq(features, codebook["centroids"], codebook["indices"]);
-      if(typeof onComplete === 'function') {
-        onComplete(result);
+      if(typeof onComplete === 'undefined') {
+        var codebook = core.kmeans(features, ncluster, method);
+        var result =  core.vq(features, codebook["centroids"], codebook["code"]);
+        return result;
+      } else {
+        var message = {"samples":features, "ncluster":ncluster, "method":method};
+        worker.postMessage(message);
+        worker.addEventListener('message', function(e) {
+          e.target.removeEventListener('message', arguments.callee);
+          if(typeof onComplete === 'function') {
+            onComplete(e.data);
+          }
+        }, false);
+        worker.addEventListener('error', function(e) {
+          e.target.removeEventListener('error', arguments.callee);
+          if(typeof onError === 'function') {
+            onError();
+          }
+        }, false);
+        return true;
       }
-      */
-      var message = {"samples":features, "ncluster":ncluster, "method":method};
-      worker.postMessage(message);
-      worker.addEventListener('message', function(e) {
-        e.target.removeEventListener('message', arguments.callee);
-        if(typeof onComplete === 'function') {
-          onComplete(e.data);
-        }
-      }, false);
-      worker.addEventListener('error', function(e) {
-        e.target.removeEventListener('error', arguments.callee);
-        if(typeof onError === 'function') {
-          onError();
-        }
-      }, false);
     },
     /* extracts feature vectors */
     extractFeatures: function(division) {
@@ -102,7 +104,7 @@
       var centroids = [],
           previous = [],
           clusters = [],
-          indices = [],
+          code = [],
           len = samples.length,
           eps = 1.0e-8,
           maxIter = 1000,
@@ -182,11 +184,16 @@
             }
             if(cnt === ncluster) return true;
             else return false;
+          },
+          sumDistance = function(centroids) {
+            var sum = 0.0, len = centroids.length;
+            for(var i=0; i<len-1; i++) {
+              sum += distance(centroids[i], centroids[i + 1]);
+            }
+            return sum;
           };
       // initializes centroids and clusters
-      console.time('initialize');
       initialize(samples, ncluster, method, centroids, clusters);
-      console.timeEnd('initialize');
       
       while(!canTerminate() && iter < maxIter) {
         iter++;
@@ -206,7 +213,7 @@
         }
         // updates clusters
         clusters = [];
-        indices = [];
+        code = [];
         for(i=0; i<len; i++) {
           var minDistance = Number.MAX_VALUE, currentLabel = -1;
           for(k=0; k<ncluster; k++) {
@@ -217,21 +224,21 @@
             }
           }
           if(!clusters[currentLabel]) clusters[currentLabel] = [];
-          if(!indices[currentLabel]) indices[currentLabel] = [];
+          if(!code[currentLabel]) code[currentLabel] = [];
           clusters[currentLabel].push(samples[i]);
-          indices[currentLabel].push(i);
+          code[currentLabel].push(i);
         }
       }
-      return {"centroids":centroids, "indices":indices};
+      return {"centroids":centroids, "code":code};
     },
     /* quantizing vectors by comparing them with centroids */
-    vq: function(samples, centroids, indices) {
+    vq: function(samples, centroids, code) {
       var ncluster = centroids.length,
           len = samples.length;
       for(var k=0; k<ncluster; k++) {
-        var ilen = indices[k].length;
+        var ilen = code[k].length;
         for(var i=0; i<ilen; i++) {
-          samples[indices[k][i]] = centroids[k];
+          samples[code[k][i]] = centroids[k];
         }
       }
       return samples;

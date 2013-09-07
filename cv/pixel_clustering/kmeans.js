@@ -1,7 +1,7 @@
 /**
  * provides routines for k-means clustering, generating code books,
  * and quantizing vectors by comparing them with centroids.
- * (specified RGB color vectors, [[R,G,B],[R,G,B],...])
+ * (specified CanvasPixelArray [[R,G,B],[R,G,B],...])
  */
 
 /* performs k-means on a set of observation vectors forming k clusters */
@@ -9,7 +9,7 @@ function kmeans(samples, ncluster, method) {
   var centroids = [],
       previous = [],
       clusters = [],
-      indices = [],
+      code = [],
       len = samples.length,
       eps = 1.0e-8,
       maxIter = 1000,
@@ -112,7 +112,7 @@ function kmeans(samples, ncluster, method) {
     }
     // updates clusters
     clusters = [];
-    indices = [];
+    code = [];
     for(i=0; i<len; i++) {
       var minDistance = Number.MAX_VALUE, currentLabel = -1;
       for(k=0; k<ncluster; k++) {
@@ -123,22 +123,22 @@ function kmeans(samples, ncluster, method) {
         }
       }
       if(!clusters[currentLabel]) clusters[currentLabel] = [];
-      if(!indices[currentLabel]) indices[currentLabel] = [];
+      if(!code[currentLabel]) code[currentLabel] = [];
       clusters[currentLabel].push(samples[i]);
-      indices[currentLabel].push(i);
+      code[currentLabel].push(i);
     }
   }
-  return {"centroids":centroids, "indices":indices};
+  return {"centroids":centroids, "code":code};
 }
 
 /* quantizing vectors by comparing them with centroids */
-function vq(samples, centroids, indices) {
+function vq(samples, centroids, code) {
   var clusterCount = centroids.length,
       len = samples.length;
   for(var k=0; k<clusterCount; k++) {
-    var ilen = indices[k].length;
+    var ilen = code[k].length;
     for(var i=0; i<ilen; i++) {
-      samples[indices[k][i]] = centroids[k];
+      samples[code[k][i]] = centroids[k];
     }
   }
   return samples;
@@ -148,7 +148,7 @@ function vq(samples, centroids, indices) {
 self.addEventListener('message', function(e) {
   var message = e.data;
   var codebook = kmeans(message.samples, message.ncluster, message.method);
-  var result = vq(message.samples, codebook["centroids"], codebook["indices"]);
+  var result = vq(message.samples, codebook["centroids"], codebook["code"]);
   postMessage(result);
 }, false);
 
