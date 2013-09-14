@@ -14,6 +14,7 @@ computer vision, graphics and image processing on the canvas
 * Fish Eye Transform
 * Image Histogram Calculation
 * Decision Tree Learning
+* K-Means Clustering
 * 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface)
 * etc..
 
