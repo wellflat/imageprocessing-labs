@@ -3,8 +3,8 @@
 ## description
 
 Machine Learning Modules
-[![pixel_clustering](http://rest-term.com/labs/repos/images/pixel_clustering.jpg))](http://rest-term.com/labs/html5/pixelclustering.html)
-[![decision_tree](http://rest-term.com/labs/repos/images/decision_tree.png))](http://rest-term.com/labs/html5/dtree.html)
+[![pixel_clustering](http://rest-term.com/labs/repos/images/pixel_clustering.jpg)](http://rest-term.com/labs/html5/pixelclustering.html)
+[![decision_tree](http://rest-term.com/labs/repos/images/decision_tree.png)](http://rest-term.com/labs/html5/dtree.html)
 
 ### samples
 [Pixel Clustering using K-Means++][PixelClustering]

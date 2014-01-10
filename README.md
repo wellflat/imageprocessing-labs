@@ -12,10 +12,10 @@ computer vision, graphics and image processing on the canvas
 * Stereo Matching
 * Poisson Image Editing
 * Corner Detection
-* Fish Eye Transform
+* Fish-Eye Transform
 * Image Histogram Calculation
 * Decision Tree Learning
-* K-Means Clustering
+* K-Means++ Clustering
 * 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface)
 * etc..
 
