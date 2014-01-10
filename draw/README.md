@@ -2,10 +2,10 @@
 
 ## description
 
-Drawing 3D shapes samples
+Drawing 3D shapes
 [![HTML5 Labs](http://rest-term.com/labs/repos/images/3dshape_drawing.png)](http://rest-term.com/labs/html5/)
 
-### samples
+### examples
 [Heart Surface][Heart]
 
 [Mobius Strip][Mobius]
