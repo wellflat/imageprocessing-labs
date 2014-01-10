@@ -20,7 +20,7 @@ PixelCluster.load(srcImgName, function() {
   var k = 4;
   var method = PixelCluster.KMEANS_PP;  // KMEANS_PP or KMEANS_RANDOM
   PixelCluster.perform(division, k, method, function(result) {
-    // render the result to canvas
+    // render the result to canvas element
     PixelCluster.render(ctx, division, result);
   });
 });
@@ -28,7 +28,7 @@ PixelCluster.load(srcImgName, function() {
 
 license
 ----------
-Copyright &copy; 2012 wellflat Licensed under the [MIT License][MIT]
+Copyright &copy; 2014 wellflat Licensed under the [MIT License][MIT]
 
 [MIT]: http://www.opensource.org/licenses/mit-license.php
 [entry]: http://rest-term.com/archives/3073/
