@@ -6,8 +6,10 @@ Corner detection using Harris operator
 
 see also [blog entry][entry]
 
-### example
+### sample
 [![corner_detection](http://rest-term.com/labs/repos/images/room_corners.jpg)](http://rest-term.com/labs/html5/corner.html)
+
+(Tests: IE9, Firefox15.0, Chrome21.0, Safari6.0, Opera12.0)
 
 ## usage
 

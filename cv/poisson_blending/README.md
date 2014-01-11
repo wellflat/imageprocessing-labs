@@ -2,12 +2,14 @@
 
 ## description
 
-Poisson Image Editing
+Image composition using Poisson Image Editing algorithm
 
 see also [blog entry][entry]
 
-### example
+### sample
 [![poisson_blending](http://rest-term.com/labs/repos/images/poisson_blending.jpg)](http://rest-term.com/labs/html5/poisson.html)
+
+(Tests: IE10, Firefox22.0, Chrome28.0, Safari6.0)
 
 ## usage
 
@@ -24,7 +26,7 @@ Poisson.load(srcImgName, dstImgName, maskImgName, function() {
 
 license
 ----------
-Copyright &copy; 2012 wellflat Licensed under the [MIT License][MIT]
+Copyright &copy; 2014 wellflat Licensed under the [MIT License][MIT]
 
 [MIT]: http://www.opensource.org/licenses/mit-license.php
 [entry]: http://rest-term.com/archives/3066/

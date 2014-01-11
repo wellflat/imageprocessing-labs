@@ -8,7 +8,9 @@ Machine Learning
 
 [![decision_tree](http://rest-term.com/labs/repos/images/decision_tree.png)](http://rest-term.com/labs/html5/dtree.html)
 
-### example
+(Tests: IE10, Firefox23.0, Chrome28.0, Safari6.0)
+
+### sample
 [Pixel Clustering using K-Means++][PixelClustering]
 
 [Decision Tree Learning][DecisionTree]
