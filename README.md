@@ -13,6 +13,7 @@ computer vision, graphics and image processing on the canvas
 * Poisson Image Editing
 * Corner Detection
 * Fish-Eye Transform
+* Image Processing Filters (convolution, symmetric nearest neighbor, jitter)
 * Image Histogram Calculation
 * Decision Tree Learning
 * K-Means++ Clustering
