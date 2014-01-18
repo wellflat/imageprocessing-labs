@@ -27,7 +27,7 @@ var corners = CornerDetector.detect(img, CornerDetector.HARRIS, params);
 
 license
 ----------
-Copyright &copy; 2012 wellflat Licensed under the [MIT License][MIT]
+Copyright &copy; 2014 wellflat Licensed under the [MIT License][MIT]
 
 [MIT]: http://www.opensource.org/licenses/mit-license.php
 [entry]: http://rest-term.com/archives/2986/

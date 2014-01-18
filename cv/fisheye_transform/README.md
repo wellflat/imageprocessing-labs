@@ -20,7 +20,7 @@ see also [blog entry][entry]
 var focalLength = 55;
 var radius = 60;
 
-// return ImageData object
+// returns ImageData object
 var result = Fisheye.transform(img, focalLength, radius);
 
 ```
