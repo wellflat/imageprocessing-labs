@@ -2,7 +2,7 @@
 
 ## description
 
-My JavaScript Practice
+My JavaScript and TypeScript Practice
 
 ## note
 
@@ -19,6 +19,7 @@ computer vision, graphics and image processing on the canvas
 * K-Means++ Clustering
 * 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface)
 * etc..
+* Deep Learning (in TypeScript)
 
 ## license
 
