@@ -2,7 +2,7 @@
 
 ## description
 
-Deep Neural Network in TypeScript
+Deep Neural Network in TypeScript (+ AngularJS)
 
 [![da_demo.png](http://rest-term.com/labs/repos/images/da_demo.png)](http://rest-term.com/labs/html5/da/)
 
