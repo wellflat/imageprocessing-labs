@@ -10,8 +10,11 @@ Deep Neural Network in TypeScript
 
 ### sample
 [Denoising Autoencoders][DenoisingAutoencoders]
+
 Stacked Denoising Autoencoders
+
 Convolutional Neural Network (soon ?)
+
 Recurrent Neural Network
 
 license
