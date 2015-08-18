@@ -1,6 +1,7 @@
 ﻿module ml {
     /**
      * Matrix class
+     * author @wellflat
      */
     export class Matrix {
         private elements: number[][];
@@ -48,17 +49,6 @@
             }
             return new Matrix(elements);
         }
-        /*
-        static createSamples(dim : number, num: number): Matrix {
-            var data: number[][] = [];
-            for(var i = 0; i < num; i++) {
-                data[i] = [];
-                for(var j = 0; j < dim; j++) {
-                    data[i][j] = Math.round(Math.random());
-                }
-            }
-            return new Matrix(data);
-        }*/
 
         public row(i: number): Vector {
             if(i <= 0 || i > this.elements.length) {
@@ -107,7 +97,7 @@
                 this.elements[0].length === matrix.elements[0].length);
         }
 
-        public multiply(matrix: number | Matrix): Matrix {
+        public multiply(matrix: number | Matrix): Matrix { // Jasmine not supported
         //public multiply(matrix): Matrix {
             if(typeof matrix === "number") {
                 return this.map(x => x * matrix);
@@ -239,6 +229,32 @@
                 }
                 return Vector.create(sums).multiply(1.0 / cols);
             }
+        }
+
+        public max(): number {
+            var row: number = this.elements.length,
+                max: number = 0.0,
+                tmp: number = 0;
+            for(var i = 0; i < row; i++) {
+                tmp = Math.max.apply(null, this.elements[i]);
+                if(max < tmp) {
+                    max = tmp;
+                }
+            }
+            return max;
+        }
+
+        public min(): number {
+            var row: number = this.elements.length,
+                min: number = Number.MAX_VALUE,
+                tmp: number = 0;
+            for(var i = 0; i < row; i++) {
+                tmp = Math.min.apply(null, this.elements[i]);
+                if(min > tmp) {
+                    min = tmp;
+                }
+            }
+            return min;
         }
 
         public log(): Matrix {
