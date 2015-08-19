@@ -153,7 +153,12 @@
     // initialize the array (supports TypedArray)
     _initArray : function() {
       if(typeof Uint8Array !== 'undefined') {
-        _bitrev = new Uint8Array(_n);
+				if(_n<=256)
+					_bitrev = new Uint8Array(_n);
+				else if(_n<=65536)
+					_bitrev = new Uint16Array(_n);
+				else
+					_bitrev = new Uint32Array(_n);
       } else {
         _bitrev = [];
       }
