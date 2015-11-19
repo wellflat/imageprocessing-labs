@@ -17,9 +17,10 @@ computer vision, graphics and image processing on the canvas
 * Image Histogram Calculation
 * Decision Tree Learning
 * K-Means++ Clustering
-* 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface)
-* etc..
+* Logistic Regression
+* 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface ...)
 * Deep Learning (in TypeScript)
+* etc..
 
 ## license
 
