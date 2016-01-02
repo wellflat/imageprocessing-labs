@@ -1,9 +1,0 @@
-{
-    "Framework": "jasmine",
- 
-    "TestHarnessLocationMode": "TestFileAdjacent",     
- 
-    "TypeScriptCodeGenTarget" : "ES5",
- 
-    "RootReferencePathMode":"SettingsFileDirectory"
-}
