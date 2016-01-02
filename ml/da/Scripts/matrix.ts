@@ -1,4 +1,4 @@
-﻿module ml {
+module ml {
     /**
      * Matrix class
      * author @wellflat
@@ -71,10 +71,10 @@
         }
 
         public at(i: number, j: number): number {
-            /*
-            if(i < 1 || i > this.elements.length || j < 1 || j > this.elements[0].length) {
-                throw new RangeError("index range error");
-            }*/
+            // Assertion
+            //if(i < 1 || i > this.elements.length || j < 1 || j > this.elements[0].length) {
+            //    throw new RangeError("index range error");
+            //}
             return this.elements[i - 1][j - 1];
         }
 
@@ -101,7 +101,7 @@
         //public multiply(matrix): Matrix {
             if(typeof matrix === "number") {
                 return this.map(x => x * matrix);
-            } else { // element-wise
+            } else {  // element-wise ( * operator in NumPy)
                 var mat: number[][] = matrix.elements,
                     i: number = this.elements.length,
                     j: number = 0,
@@ -232,29 +232,18 @@
         }
 
         public max(): number {
-            var row: number = this.elements.length,
+            var rows: number = this.elements.length,
+                cols: number = this.elements[0].length,
                 max: number = 0.0,
                 tmp: number = 0;
-            for(var i = 0; i < row; i++) {
-                tmp = Math.max.apply(null, this.elements[i]);
-                if(max < tmp) {
-                    max = tmp;
+            for(var i = 0; i < rows; i++) {
+                for(var j = 0; j < cols; j++) {
+                    if(max < this.elements[i][j]) {
+                        max = this.elements[i][j];
+                    }
                 }
             }
             return max;
-        }
-
-        public min(): number {
-            var row: number = this.elements.length,
-                min: number = Number.MAX_VALUE,
-                tmp: number = 0;
-            for(var i = 0; i < row; i++) {
-                tmp = Math.min.apply(null, this.elements[i]);
-                if(min > tmp) {
-                    min = tmp;
-                }
-            }
-            return min;
         }
 
         public log(): Matrix {
