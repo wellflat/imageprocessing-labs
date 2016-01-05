@@ -12,7 +12,21 @@ module ml {
             // initializer
         }
 
-        public train(learningRate: number, l2Reg: number): void {
+        public fit(learningRate: number, l2Reg: number = 0.00, maxIter: number = 100, verbose: boolean = false): void {
+            // TODO: implement 
+            for(var i = 0; i < maxIter; i++) {
+                this.train(learningRate, l2Reg);
+                if(i % 10 == 0) {
+                    var loss: number = this.getLoss();
+                    if(verbose) {
+                        console.log("Loss: " + loss.toString());
+                    }
+                    learningRate *= 0.995;
+                }
+            }
+        }
+
+        public train(learningRate: number, l2Reg: number = 0.00): void {
             var prob: Matrix = this.softmax(this.input.dot(this.W).addBias(this.b));
             var dy: Matrix = this.label.subtract(prob);
             this.W = this.W.add(this.input.transpose().dot(dy).multiply(learningRate).subtract(this.W.multiply(l2Reg).multiply(learningRate)));
