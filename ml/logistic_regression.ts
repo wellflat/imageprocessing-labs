@@ -1,14 +1,12 @@
 module ml {
     /**
      * Logistic Regression class
-     * author @wellflat
      */
     export class LogisticRegression {
 
         constructor(private input: Matrix, private label: Matrix,
-            private nInput: number, private nOutput: number,
-            private W: Matrix = Matrix.zeros(nInput, nOutput),
-            private b: Vector = Vector.zeros(nOutput)) {
+            private W: Matrix = Matrix.zeros(input.cols, label.cols),
+            private b: Vector = Vector.zeros(label.cols)) {
             // initializer
         }
 
@@ -29,7 +27,7 @@ module ml {
         public train(learningRate: number, l2Reg: number = 0.00): void {
             var prob: Matrix = this.softmax(this.input.dot(this.W).addBias(this.b));
             var dy: Matrix = this.label.subtract(prob);
-            this.W = this.W.add(this.input.transpose().dot(dy).multiply(learningRate).subtract(this.W.multiply(l2Reg).multiply(learningRate)));
+            this.W = this.W.add(this.input.transpose().dot(dy).multiply(learningRate).subtract(this.W.multiply(l2Reg)));
             this.b = this.b.add(dy.mean(0).multiply(learningRate));
         }
 
@@ -39,16 +37,16 @@ module ml {
 
         // computes cross entropy loss
         public getLoss(): number {
-            // -log(y|p) = -(ylog(p) + (1 - y)log(1 - p))
+            // -log P(t|p) = -(tlog(p) + (1 - t)log(1 - p))
             // log loss is undefined for p=0 or p=1, so probabilities are clipped
             var p: Matrix = this.softmax(this.input.dot(this.W).addBias(this.b)),
                 rows: number = this.label.rows,
                 cols: number = this.label.cols,
                 clip = x => Math.max(1.0e-15, Math.min(1 - 1.0e-15, x)),
-                one_y: Matrix = Matrix.ones(rows, cols).subtract(this.label), // 1 - y
+                one_t: Matrix = Matrix.ones(rows, cols).subtract(this.label), // 1 - t
                 logone_p: Matrix = Matrix.ones(rows, cols).subtract(p).map(clip).log(), // log(1 - p)
-                ylogp: Matrix = this.label.multiply(p.map(clip).log()),  // ylog(p)
-                loss: number = -(ylogp.add(one_y.multiply(logone_p)).sum(1).mean());
+                tlogp: Matrix = this.label.multiply(p.map(clip).log()),  // tlog(p)
+                loss: number = -(tlogp.add(one_t.multiply(logone_p)).sum(1).mean());
             return loss;
         }
 
