@@ -1,12 +1,12 @@
-# javascript labs
+# Image processing and Machine learning labs
 
 ## description
 
-My JavaScript and TypeScript Practice
+Image processing and Machine learning in JavaScript and TypeScript
 
 ## note
 
-computer vision, graphics and image processing on the canvas
+computer vision, image processing and machine learning on the web browser or node
 
 * Fast Fourier Transform (1D-FFT/IFFT, 2D-FFT/IFFT)
 * Stereo Matching
