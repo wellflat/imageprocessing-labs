@@ -3,7 +3,7 @@
      * Matrix class
      */
     export class Matrix {
-        private elements: number[][];
+        public elements: number[][];
 
         constructor(elements: number[][]) {
             this.setElements(elements);

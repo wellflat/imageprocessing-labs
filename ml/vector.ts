@@ -4,7 +4,7 @@
      */
     export class Vector {
 
-        constructor(private elements: number[]) { }
+        constructor(public elements: number[]) { }
 
         get size(): number { return this.elements.length; }
 

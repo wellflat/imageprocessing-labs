@@ -2,7 +2,6 @@
  *   archive.ics.uci.edu/ml/datasets/iris
  *   classes: 3
  *   samples per class: 50
- *   samples total: 150
  *   dimensionality: 4
  *   features: real, positive
  */

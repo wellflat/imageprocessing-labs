@@ -1,4 +1,4 @@
-module ml {
+﻿module ml {
     /**
      * Logistic Regression class
      */
@@ -10,9 +10,9 @@ module ml {
             // initializer
         }
 
-        public fit(learningRate: number, l2Reg: number = 0.00, maxIter: number = 100, verbose: boolean = false): void {
-            // TODO: implement 
-            for(var i = 0; i < maxIter; i++) {
+        public fit(learningRate: number, iter: number, l2Reg: number = 0.00, verbose: boolean = false): void {
+            // TODO: implement early stopping
+            for(var i = 0; i < iter; i++) {
                 this.train(learningRate, l2Reg);
                 if(i % 10 == 0) {
                     var loss: number = this.getLoss();
@@ -25,10 +25,12 @@ module ml {
         }
 
         public train(learningRate: number, l2Reg: number = 0.00): void {
-            var prob: Matrix = this.softmax(this.input.dot(this.W).addBias(this.b));
-            var dy: Matrix = this.label.subtract(prob);
-            this.W = this.W.add(this.input.transpose().dot(dy).multiply(learningRate).subtract(this.W.multiply(l2Reg)));
-            this.b = this.b.add(dy.mean(0).multiply(learningRate));
+            var prob: Matrix = this.softmax(this.input.dot(this.W).addBias(this.b)),
+                dy: Matrix = prob.subtract(this.label),
+                gradW: Matrix = this.input.transpose().dot(dy).subtract(this.W.multiply(l2Reg)),
+                gradB: Vector = dy.mean(0);
+            this.W = this.W.subtract(gradW.multiply(learningRate)),
+            this.b = this.b.subtract(gradB.multiply(learningRate));
         }
 
         public predict(x: Matrix): Matrix {
@@ -42,7 +44,7 @@ module ml {
             var p: Matrix = this.softmax(this.input.dot(this.W).addBias(this.b)),
                 rows: number = this.label.rows,
                 cols: number = this.label.cols,
-                clip = x => Math.max(1.0e-15, Math.min(1 - 1.0e-15, x)),
+                clip = x => Math.max(1.0e-14, Math.min(1 - 1.0e-14, x)),
                 one_t: Matrix = Matrix.ones(rows, cols).subtract(this.label), // 1 - t
                 logone_p: Matrix = Matrix.ones(rows, cols).subtract(p).map(clip).log(), // log(1 - p)
                 tlogp: Matrix = this.label.multiply(p.map(clip).log()),  // tlog(p)
@@ -52,6 +54,24 @@ module ml {
 
         // numerically stable softmax function
         private softmax(x: Matrix): Matrix {
+            var elements: number[][] = [];
+            for(var i = 0; i < x.rows; i++) {
+                elements[i] = [];
+                var row: number[] = x.elements[i];
+                var max: number = Math.max.apply(null, row);
+                var total: number = 0.0;
+                row = row.map(value => Math.exp(value - max));
+                row.map(value => total += value);
+                var a: number[] = row.map(value => value / total);
+                for(var j = 0; j < x.cols; j++) {
+                    elements[i][j] = a[j];
+                }
+            }
+            return new Matrix(elements);
+        }
+        
+        // TODO: implement logsumexp
+        private softmax2(x: Matrix): Matrix {
             var max: number = x.max();
             var e: Matrix = x.map(value => Math.exp(value - max));
             var elements: number[][] = [];
@@ -67,6 +87,5 @@ module ml {
             }
             return new Matrix(elements);
         }
-
     }
 } 
