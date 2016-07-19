@@ -18,6 +18,7 @@ computer vision, image processing and machine learning on the web browser or nod
 * Decision Tree Learning
 * K-Means++ Clustering
 * Logistic Regression
+* Adaptive Regularization of Weight Vectors (AROW)
 * 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface ...)
 * Deep Learning (in TypeScript)
 * etc..
