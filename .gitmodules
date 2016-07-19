@@ -1,0 +1,3 @@
+[submodule "vscode-samples"]
+	path = vscode-samples
+	url = git@github.com:wellflat/vscode-samples.git
