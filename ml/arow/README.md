@@ -2,6 +2,7 @@
 
 * AROW algorithm and LIBSVM format data loader modules  
 (JavaScript codes in 'out' directory)
+* LIBSVM Data: Classification (Binary Class) [news20.binary](https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html#news20.binary)
 
 ## usage in TypeScript
 
