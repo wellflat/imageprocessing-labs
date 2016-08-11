@@ -1,8 +1,9 @@
 # Adaptive Regularization of Weight Vectors (AROW)
 
-* AROW algorithm and LIBSVM format data loader modules
+* AROW algorithm and LIBSVM format data loader modules  
+(JavaScript codes in 'out' directory)
 
-## usage
+## usage in TypeScript
 
 ```
 import {Feature, DataSet} from './types';
