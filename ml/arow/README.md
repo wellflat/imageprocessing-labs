@@ -5,7 +5,7 @@
 
 ## usage in TypeScript
 
-```
+```typescript
 import {Feature, DataSet} from './types';
 import {AROW} from './arow';
 import {DataLoader} from './data_loader';
