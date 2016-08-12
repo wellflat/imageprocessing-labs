@@ -8,6 +8,14 @@ var AROW = (function () {
         this.cov.fill(1.0);
         this.r = r;
     }
+    AROW.prototype.predict = function (x) {
+        return this.computeMargin(x) > 0 ? 1 : -1;
+    };
+    AROW.prototype.clear = function () {
+        this.mean = new Float32Array(this.f);
+        this.cov = new Float32Array(this.f);
+        this.cov.fill(1.0);
+    };
     AROW.prototype.update = function (x, label) {
         var _this = this;
         var margin = this.computeMargin(x);
@@ -15,8 +23,8 @@ var AROW = (function () {
         if (margin * label >= 1) {
             return 0;
         }
-        var v = this.computeConfidence(x);
-        var beta = 1.0 / (v + this.r);
+        var confidence = this.computeConfidence(x);
+        var beta = 1.0 / (confidence + this.r);
         var alpha = (1.0 - label * margin) * beta;
         x.forEach(function (e) {
             _this.mean[e.index] += alpha * label * _this.cov[e.index] * e.value;
@@ -25,9 +33,6 @@ var AROW = (function () {
             _this.cov[e.index] = 1.0 / ((1.0 / _this.cov[e.index]) + e.value * e.value / _this.r);
         });
         return loss;
-    };
-    AROW.prototype.predict = function (x) {
-        return this.computeMargin(x) > 0 ? 1 : -1;
     };
     AROW.prototype.computeMargin = function (x) {
         var _this = this;
