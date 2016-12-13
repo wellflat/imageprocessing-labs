@@ -15,10 +15,12 @@ computer vision, image processing and machine learning on the web browser or nod
 * Fish-Eye Transform
 * Image Processing Filters (convolution, symmetric nearest neighbor, jitter)
 * Image Histogram Calculation
+* Image Feature Extraction
 * Decision Tree Learning
 * K-Means++ Clustering
 * Logistic Regression
 * Adaptive Regularization of Weight Vectors (AROW)
+* Soft Confidence Weighted Learning (SCW)
 * 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface ...)
 * Deep Learning (in TypeScript)
 * etc..
