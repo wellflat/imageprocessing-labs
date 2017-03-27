@@ -27,7 +27,7 @@ class RegionPoint {
         this.y = y;
         this.angle = angle;
         this.modgrad = modgrad;
-        /** @type {Uint8Array} */
+        /** @type {Uint8Array|number} */
         this.used = null;
     }
 }
@@ -67,7 +67,7 @@ class Rect {
  * @param nBins        Number of bins in pseudo-ordering of gradient modulus.
  */
 export default class LSD {
-    constructor(scale = 0.8, sigmaScale = 0.6, quant = 2.0, angTh = 22.5,
+    constructor(refine = util.LSD_REFINE_STD, scale = 0.8, sigmaScale = 0.6, quant = 2.0, angTh = 22.5,
         logEps = 0.0, densityTh = 0.7, nBins = 1024) {
         this.scale = scale;
         this.sigmaScale = sigmaScale;
@@ -76,6 +76,7 @@ export default class LSD {
         this.logEps = logEps;
         this.densityTh = densityTh;
         this.nBins = nBins;
+        this.doRefine = refine;
         /** @type {ImageData} */
         this.image = null;
         /** @type {Uint8ClampedArray} */
@@ -123,6 +124,7 @@ export default class LSD {
         this.height = image.height;
         console.log('detect()', this.width, this.height);
         this.flsd(lines, w, p, n);
+        console.log(lines);
     }
 /**
  * Detect lines in the whole input image.
@@ -149,8 +151,6 @@ export default class LSD {
             const sprec = 3;
             const h = Math.ceil(this.sigma * Math.sqrt(2 * sprec * Math.log(10.0)));
             
-            console.log('todo implement: flsd');
-
             this.llAngle(rho, this.nBins);
         } else {
 
@@ -165,18 +165,42 @@ export default class LSD {
         for (let i = 0, listSize = this.list.length; i < listSize; i++) {
             const point = this.list[i].p;
             if ((this.at(this.used, point) === util.NOT_USED) &&
-            (this.at(this.angles, point) !== util.NOT_DEF)) {
+                (this.at(this.angles, point) !== util.NOT_DEF)) {
                 let regAngle = 0.0;
                 // todo check logic regionGrow
                 regAngle = this.regionGrow(this.list[i].p, reg, regAngle, prec);
-
                 if (reg.length < minRegSize) {
                     continue;
                 }
-
                 let rec = new Rect();
                 this.region2Rect(reg, regAngle, prec, p, rec);
+                /*
+                // compute heavy ...
                 let logNfa = -1;
+                if (this.doRefine > util.LSD_REFINE_NONE) {
+                    if (!this.refine(reg, regAngle, prec, p, rec, this.densityTh)) {
+                        continue;
+                    }
+                    if (this.doRefine >= util.LSD_REFINE_ADV) {
+                        logNfa = this.rectImprove(rec);
+                        if (logNfa <= this.logEps) {
+                            continue;
+                        }
+                    }
+                }
+                */
+                rec.x1 += 0.5;
+                rec.y1 += 0.5;
+                rec.x2 += 0.5;
+                rec.y2 += 0.5;
+                if (this.scale != 1) {
+                    rec.x1 /= this.scale;
+                    rec.y1 /= this.scale;
+                    rec.x2 /= this.scale;
+                    rec.y2 /= this.scale;
+                    rec.width /= this.scale;
+                }
+                lines.push(new Vec4(rec.x1, rec.y1, rec.x2, rec.y2));
                 
             }
         }
@@ -432,7 +456,90 @@ export default class LSD {
         }
         return theta;
     }
-    
+
+    /**
+     * @param {RegionPoint[]} reg
+     * @param {number} regAngle
+     * @param {number} prec
+     * @param {number} p
+     * @param {Rect} rec
+     * @param {number} densityTh
+     * @return {boolean}
+     */    
+    refine(reg, regAngle, prec, p, rec, densityTh) {
+        let density = reg.length / (util.dist(rec.x1, rec.y1, rec.x2, rec.y2) * rec.width);
+        if (density >= densityTh) {
+            return true;
+        }
+        let xc = reg[0].x;
+        let yc = reg[0].y;
+        const angC = reg[0].angle;
+        let sum = 0, sSum = 0, n = 0;
+        for (let i = 0; i < reg.length; i++) {
+            reg[i].used = util.NOT_USED;
+            if (util.dist(xc, yc, reg[i].x, reg[i].y) < reg.width) {
+                const angle = reg[i].angle;
+                let angD = util.angleDiff(angle, angC);
+                sum += angD;
+                sSum += angD * angD;
+                n++;
+            }
+            let meanAngle = sum / n;
+            let tau = 2.0 * Math.sqrt((sSum - 2.0 * meanAngle * sum) / n + meanAngle * meanAngle);
+            this.regionGrow(new Point(reg[0].x, reg[0].y), reg, regAngle, tau);
+            if (reg.length < 2) {
+                return false;
+            }
+            this.region2Rect(reg, regAngle, prec, p, rec);
+            density = reg.length / (util.dist(rec.x1, rec.y1, rec.x2, rec.y2) * rec.width);
+            if (density < densityTh) {
+                //this.reduceRegionRadius();
+            } else {
+                return true;
+            }
+        }
+    }
+
+    /**
+     * @param {RegionPoint[]} reg
+     * @param {number} regAngle
+     * @param {number} prec
+     * @param {number} p
+     * @param {Rect} rec
+     * @param {number} density
+     * @param {number} densityTh
+     * @return {boolean}
+     */    
+    reduceRegionRadius(reg, regAngle, prec, p, rec, density, densityTh) {
+        let xc = reg[0].x;
+        let yc = reg[0].y;
+        let radSq1 = util.distSq(xc, yc, rec.x1, rec.y1);
+        let radSq2 = util.distSq(xc, yc, rec.x2, rec.y2);
+        let radSq = radSq1 > radSq2 ? radSq1 : radSq2;
+        while (density > densityTh) {
+            radSq *= 0.75 * 0.75; // reduce region's radius to 75%
+            for (let i = 0; i < reg.length; i++) {
+                if (util.distSq(xc, yc, reg[i].x, reg[i].y) > radSq) {
+                    // remove point from the region
+                    reg[i].used = util.NOT_USED;
+                    const tmp = reg[i];
+                    reg[i] = reg[reg.length - 1];
+                    reg[reg.length - 1] = tmp;
+                    reg.pop();
+                    --i;
+                }
+            }
+            if (reg.length < 2) {
+                return false;
+            }
+            // re-compute rectangle
+            this.region2Rect(reg, regAngle, prec, p, rec);
+            // re-compute region points density
+            density = reg.length / (util.dist(rec.x1, rec.y1, rec.x2, rec.y2) * rec.width);
+        }
+        return true;
+    }
+
     /**
      * @param {ImageData} image
      * @return {Uint8ClampedArray}

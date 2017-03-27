@@ -10,6 +10,9 @@ const USED = 1;
 const NOT_USED = 0;
 const RELATIVE_ERROR_FACTOR = 100.0;
 const DEG_TO_RADS = Math.PI / 180;
+const LSD_REFINE_NONE = 0;
+const LSD_REFINE_STD = 1;
+const LSD_REFINE_ADV = 2;
 
 
 let logGamma = x => x > 15.0 ? logGammaWindschitl(x) : logGammaLanczos(x);
@@ -101,5 +104,6 @@ function AsmallerB_XoverY(a, b) {
 export {
     M_3_2_PI, M_2__PI, M_LN10,
     NOT_DEF, USED, NOT_USED, RELATIVE_ERROR_FACTOR, DEG_TO_RADS,
-    logGamma, dist, angleDiff, doubleEqual, AsmallerB_XoverY
+    LSD_REFINE_NONE, LSD_REFINE_STD, LSD_REFINE_ADV,
+    logGamma, dist, distSq, angleDiff, doubleEqual, AsmallerB_XoverY
 };
