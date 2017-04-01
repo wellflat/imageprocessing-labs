@@ -22,13 +22,13 @@ class CoorList {
 }
 
 class RegionPoint {
-    constructor(x = 0, y = 0, angle = 0.0, modgrad = 0.0) {
+    constructor(x = 0, y = 0, angle = 0.0, modgrad = 0.0, used = null) {
         this.x = x;
         this.y = y;
         this.angle = angle;
         this.modgrad = modgrad;
-        /** @type {Uint8Array|number} */
-        this.used = null;
+        /** @type {number} */
+        this.used = used;
     }
 }
 
@@ -114,6 +114,7 @@ export default class LSD {
  *                          This vector will be calculated _only_ when the objects type is REFINE_ADV
  */
     detect(image) {
+        /** @type {Vec4[]} */
         let lines = [],
             w = [],
             p = [],
@@ -122,9 +123,8 @@ export default class LSD {
         this.scaledImageData = this.reshape(image);
         this.width = image.width;
         this.height = image.height;
-        console.log('detect()', this.width, this.height);
         this.flsd(lines, w, p, n);
-        console.log(lines);
+        return lines;
     }
 /**
  * Detect lines in the whole input image.
@@ -160,14 +160,13 @@ export default class LSD {
         let LOG_NT = 5 * (Math.log10(this.width) + Math.log10(this.height)) / 2 + Math.log10(11.0);
         let minRegSize = -LOG_NT / Math.log10(p);
         this.used = new Uint8Array(this.scaledImageData.length);
-        /** @type {RegionPoint[]} */
-        let reg = [];
         for (let i = 0, listSize = this.list.length; i < listSize; i++) {
             const point = this.list[i].p;
             if ((this.at(this.used, point) === util.NOT_USED) &&
                 (this.at(this.angles, point) !== util.NOT_DEF)) {
                 let regAngle = 0.0;
-                // todo check logic regionGrow
+                /** @type {RegionPoint[]} */
+                let reg = [];
                 regAngle = this.regionGrow(this.list[i].p, reg, regAngle, prec);
                 if (reg.length < minRegSize) {
                     continue;
@@ -284,11 +283,15 @@ export default class LSD {
                 }
             }
         }
-        /*
-        rangeE.forEach((value, index) => {
-            this.list[index] = value;
+        // check next (for debug)
+        let next = [];
+        this.list.forEach((value, index) => {
+            if (value.next != 0) {
+                next.push([index, value.next]);
+            }
+            
         });
-        */
+        
     }
 
     /**
@@ -309,7 +312,7 @@ export default class LSD {
         reg.push(seed);
         let sumdx = Math.cos(regAngle);
         let sumdy = Math.sin(regAngle);
-        //seed.used[0] = USED;
+        seed.used = util.USED;
 
         for (let i = 0; i < reg.length; i++) {
             const rpoint = reg[i],
@@ -326,7 +329,7 @@ export default class LSD {
                         isUsed = util.USED;
                         this.used[xx + step] = util.USED;
                         let regionPoint = new RegionPoint(
-                            xx, yy, angle, this.modgrad[xx + step]
+                            xx, yy, angle, this.modgrad[xx + step], isUsed
                         );
                         reg.push(regionPoint);
                         sumdx += Math.cos(angle);
