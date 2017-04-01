@@ -239,8 +239,7 @@ export default class LSD {
                 }
             }
         }
-        this.list.length = width * height;
-        this.list.fill(new CoorList());
+        //this.list.length = width * height;
         /** @type {CoorList[]} */
         let rangeS = [];
         rangeS.length = nBins;
@@ -251,25 +250,25 @@ export default class LSD {
         //rangeE.fill(new CoorList());
         let count = 0;
         let binCoef = (maxGrad > 0) ? (nBins - 1) / maxGrad : 0;
-                
         for (let y = 0; y < height - 1; y++) {
             let step = y * width;
             for (let x = 0; x < width - 1; x++) {
                 let i = Math.floor(this.modgrad[x + step] * binCoef);
                 if (!rangeE[i]) {
+                    this.list[count] = new CoorList();
                     rangeE[i] = rangeS[i] = this.list[count];
                     count++;
                 } else {
-                    // todo check logic
-                    rangeE[i].next = this.list[count];
+                    this.list[count] = new CoorList();
                     rangeE[i] = this.list[count];
+                    rangeE[i].next = this.list[count];
                     count++;
                 }
                 rangeE[i].p = new Point(x, y);
                 rangeE[i].next = 0;
             }
         }
-        let idx = this.nBins - 1;
+        let idx = nBins - 1;
         for (; idx > 0 && !rangeS[idx]; idx--) {
             // do nothing.
         }
@@ -280,10 +279,16 @@ export default class LSD {
                 idx--;
                 if (rangeS[idx]) {
                     rangeE[endIdx].next = rangeS[idx];
+                    rangeE[endIdx] = rangeE[idx];
                     endIdx = idx;
                 }
             }
         }
+        /*
+        rangeE.forEach((value, index) => {
+            this.list[index] = value;
+        });
+        */
     }
 
     /**
