@@ -1,5 +1,5 @@
 /**
- * constants and utility functions
+ * constants and utility math functions
  */
 
 const M_3_2_PI = (3 * Math.PI) / 2;
