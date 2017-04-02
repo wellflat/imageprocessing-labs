@@ -52,10 +52,10 @@ export default class LSD {
         /** @type {Uint8Array} */
         this.used = null;    
     }
-/**
- * Detect lines in the input image.
-  * @param {ImageData} image
- */
+    /**
+     * Detect lines in the input image.
+     * @param {ImageData} image
+     */
     detect(image) {
         /** @type {Vec4[]} */
         let lines = [],
@@ -69,18 +69,35 @@ export default class LSD {
         this.lsd(lines, w, p, n);
         return lines;
     }
-  /**
-   * @param {Vec4[]} lines        Return: A vector of Vec4f elements specifying the beginning and ending point of a line.
-   *                              Where Vec4f is (x1, y1, x2, y2), point 1 is the start, point 2 - end.
-   *                              Returned lines are strictly oriented depending on the gradient.
-   * @param widths        Return: Vector of widths of the regions, where the lines are found. E.g. Width of line.
-   * @param precisions    Return: Vector of precisions with which the lines are found.
-   * @param nfas          Return: Vector containing number of false alarms in the line region, with precision of 10%.
-   *                              The bigger the value, logarithmically better the detection.
-   *                                  * -1 corresponds to 10 mean false alarms
-   *                                  * 0 corresponds to 1 mean false alarm
-   *                                  * 1 corresponds to 0.1 mean false alarms
-   */
+    /**
+     * Draws the line segments on a given image.
+     * @param {CanvasRenderingContext2D} context
+     * @param {Vec4[]} lines
+     * @param {string} color
+     */
+    drawSegments(context, lines, color = '#ff0000') {
+        context.strokeStyle = color;
+        context.lineWidth = 1;
+        lines.forEach((v, i) => {
+            context.beginPath();
+            context.moveTo(v.x1, v.y1);
+            context.lineTo(v.x2, v.y2);
+            context.stroke();
+            context.closePath();
+        });
+    }
+    /**
+     * @param {Vec4[]} lines        Return: A vector of Vec4f elements specifying the beginning and ending point of a line.
+     *                              Where Vec4f is (x1, y1, x2, y2), point 1 is the start, point 2 - end.
+     *                              Returned lines are strictly oriented depending on the gradient.
+     * @param widths        Return: Vector of widths of the regions, where the lines are found. E.g. Width of line.
+     * @param precisions    Return: Vector of precisions with which the lines are found.
+     * @param nfas          Return: Vector containing number of false alarms in the line region, with precision of 10%.
+     *                              The bigger the value, logarithmically better the detection.
+     *                                  * -1 corresponds to 10 mean false alarms
+     *                                  * 0 corresponds to 1 mean false alarm
+     *                                  * 1 corresponds to 0.1 mean false alarms
+     */
     lsd(lines, widths, precisions, nfas) {
         const prec = Math.PI * this.angTh / 180;
         const p = this.angTh / 180;

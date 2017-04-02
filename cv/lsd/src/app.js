@@ -1,10 +1,7 @@
 ﻿//import React from 'react';
 //import ReactDOM from 'react-dom';
 import LSD from './lsd';
-import Vec4 from './vec';
 import SampleImage from './garden_terrace_grey.jpg';
-
-let detector = new LSD(0, 1.0);
 
 /*
 class CanvasComponent extends React.Component {
@@ -54,23 +51,8 @@ image.onload = () => {
     context.drawImage(image, 0, 0, width, height);
     document.getElementById('content').appendChild(canvas);
     let imageData = context.getImageData(0, 0, width, height);
+    let detector = new LSD(0, 1.0);
     let lines = detector.detect(imageData);
     console.log("lines: " + lines.length.toString());
-    drawSeguments(context, lines);
+    detector.drawSegments(context, lines);
 };
-
-/**
- * @param {CanvasRenderingContext2D} context
- * @param {Vec4[]} lines
- */
-function drawSeguments(context, lines) {
-    context.strokeStyle = "#ff0000";
-    context.lineWidth = 1;
-    lines.forEach((v, i) => {
-        context.beginPath();
-        context.moveTo(v.x1, v.y1);
-        context.lineTo(v.x2, v.y2);
-        context.stroke();
-        context.closePath();
-    });
-}
