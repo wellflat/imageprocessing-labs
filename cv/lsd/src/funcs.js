@@ -10,17 +10,16 @@ const USED = 1;
 const NOT_USED = 0;
 const RELATIVE_ERROR_FACTOR = 100.0;
 const DEG_TO_RADS = Math.PI / 180;
-const LSD_REFINE_NONE = 0;
-const LSD_REFINE_STD = 1;
-const LSD_REFINE_ADV = 2;
+const REFINE_NONE = 0;
+const REFINE_STD = 1;
+const REFINE_ADV = 2;
 
 
-let logGamma = x => x > 15.0 ? logGammaWindschitl(x) : logGammaLanczos(x);
+const logGamma = x => x > 15.0 ? logGammaWindschitl(x) : logGammaLanczos(x);
 
-function logGammaWindschitl(x) {
-    return 0.918938533204673 + (x - 0.5) * Math.log(x) - x
-        + 0.5 * x * Math.log(x * Math.sinh(1 / x) + 1 / (810.0 * Math.pow(x, 6.0)));
-}
+const logGammaWindschitl = x =>
+    0.918938533204673 + (x - 0.5) * Math.log(x) - x
+    + 0.5 * x * Math.log(x * Math.sinh(1 / x) + 1 / (810.0 * Math.pow(x, 6.0)));
 
 function logGammaLanczos(x) {
     const q = [
@@ -37,13 +36,11 @@ function logGammaLanczos(x) {
     return a + Math.log(b);
 }
 
-function distSq(x1, x2, y1, y2) {
-    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-}
+const distSq = (x1, x2, y1, y2) =>
+    (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
 
-function dist(x1, x2, y1, y2) {
-    return Math.sqrt(distSq(x1, y1, x2, y2));
-}
+const dist = (x1, x2, y1, y2) => Math.sqrt(distSq(x1, y1, x2, y2));
+
 
 /**
  * @param {number} a
@@ -93,6 +90,11 @@ function doubleEqual(a, b) {
     return (absDiff / absMax) <= (RELATIVE_ERROR_FACTOR * Number.EPSILON);
 }
 
+/**
+ * 
+ * @param {Edge} a
+ * @param {Edge} b
+ */
 function AsmallerB_XoverY(a, b) {
     if (a.p.x == b.p.x) {
         return a.p.y < b.p.y;
@@ -104,6 +106,6 @@ function AsmallerB_XoverY(a, b) {
 export {
     M_3_2_PI, M_2__PI, M_LN10,
     NOT_DEF, USED, NOT_USED, RELATIVE_ERROR_FACTOR, DEG_TO_RADS,
-    LSD_REFINE_NONE, LSD_REFINE_STD, LSD_REFINE_ADV,
+    REFINE_NONE, REFINE_STD, REFINE_ADV,
     logGamma, dist, distSq, angleDiff, doubleEqual, AsmallerB_XoverY
 };

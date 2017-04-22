@@ -14,12 +14,12 @@ module.exports = {
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['es2015', 'react', 'react-hmre']
+                    presets: ['es2015', 'react'],//, 'react-hmre']
                 }
             },
             {
                 test: /\.html$/,
-                loader: 'html'
+                loader: 'html-loader'
             },
             {
                 test: /\.(jpg|png)$/,
@@ -28,7 +28,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['.js', '.jsx']
     },
     devServer: {
         contentBase: '/dst',

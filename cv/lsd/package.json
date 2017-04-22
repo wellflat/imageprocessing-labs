@@ -5,7 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "webpack": "node_modules/.bin/webpack",
+    "prod": "node_modules/.bin/webpack -p",
+    "dev": "node_modules/.bin/webpack -d",
     "start": "node_modules/.bin/webpack-dev-server --hot --inline"
   },
   "keywords": [],
@@ -18,8 +19,10 @@
     ]
   },
   "dependencies": {
+    "material-ui": "^0.17.4",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "react-tap-event-plugin": "^2.0.1"
   },
   "devDependencies": {
     "babel": "^6.5.2",
@@ -29,14 +32,15 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-react-hmre": "^1.1.1",
     "babel-register": "^6.18.0",
+    "eslint": "^3.0.0",
     "eslint-plugin-react": "^6.9.0",
-    "file-loader": "^0.9.0",
+    "file-loader": "^0.11.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.26.0",
     "url-loader": "^0.5.7",
-    "webpack": "^1.14.0",
-    "webpack-dev-server": "^1.16.2"
+    "webpack": "^2.4.1",
+    "webpack-dev-server": "^2.4.2"
   }
 }
