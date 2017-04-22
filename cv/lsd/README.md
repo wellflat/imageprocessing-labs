@@ -43,7 +43,7 @@ import SampleImage from './sample.jpg';
 
 ReactDOM.render(
     <MuiThemeProvider>
-        <LSDComponent src={BuildingImage} />
+        <LSDComponent src={SampleImage} />
     </MuiThemeProvider>,
     document.getElementById('content')
 );
