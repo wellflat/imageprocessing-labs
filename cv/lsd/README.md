@@ -9,25 +9,44 @@ see also [IPOL Journal][IPOL]
 ### demo
 todo
 
-## usage in ES6
+## usage in JavaScript (ES2015)
 ```js
 import LSD from './lsd';
 import SampleImage from './sample.jpg';
 
-let image = new Image();
+const image = new Image();
 image.src = SampleImage;
 image.onload = () => {
-  const width = image.width;
-  const height = image.height;
-  let canvas = document.createElement('canvas');
-  let context = canvas.getContext('2d');
-  canvas.width = width;
-  canvas.height = height;
-  context.drawImage(image, 0, 0, width, height);
-  let imageData = context.getImageData(0, 0, width, height);
-  let detector = new LSD();
-  let lines = detector.detect(imageData);
+    const width = image.width;
+    const height = image.height;
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = width;
+    canvas.height = height;
+    context.drawImage(image, 0, 0, width, height);
+    document.getElementById('content').appendChild(canvas);
+    const imageData = context.getImageData(0, 0, width, height);
+    const detector = new LSD();
+    const lines = detector.detect(imageData);
+    console.log('lines: ' + lines.length.toString());
+    detector.drawSegments(context, lines);
 };
+```
+
+### React Component
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import LSDComponent from './lsd_component';
+import SampleImage from './sample.jpg';
+
+ReactDOM.render(
+    <MuiThemeProvider>
+        <LSDComponent src={BuildingImage} />
+    </MuiThemeProvider>,
+    document.getElementById('content')
+);
 ```
 
 
