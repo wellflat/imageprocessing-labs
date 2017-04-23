@@ -14,7 +14,7 @@ see also [blog entry][entry]
 
 [![lsd_demo](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/lsd_demo.jpg)](http://rest-term.com/labs/html5/lsd/index.html)
 
-<img src="https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/lsd_demo.jpg" width="492" />
+<img src="https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/lsd_demo.jpg" width="492px" />
 
 ## usage in JavaScript (ES2015)
 ```js
