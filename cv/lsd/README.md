@@ -4,10 +4,12 @@
 
 Line detection using Line Segments Detector (LSD) algorithm
 
+![lsd](http://rest-term.com/labs/repos/images/lsd_apply.jpg)
+
 see also [IPOL Journal][IPOL]
 
 ### demo
-todo
+[![lsd_demo](http://rest-term.com/labs/repos/images/lsd_demo.jpg)](http://rest-term.com/labs/html5/lsd/)
 
 ## usage in JavaScript (ES2015)
 ```js
