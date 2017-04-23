@@ -12,6 +12,7 @@ todo
 ## usage in JavaScript (ES2015)
 ```js
 import LSD from './lsd';
+// input 8bit gray scale image
 import SampleImage from './sample.jpg';
 
 const image = new Image();
