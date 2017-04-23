@@ -2,11 +2,11 @@
 
 ## description
 
-Line detection using Line Segments Detector (LSD) algorithm
+Line detection using Line Segments Detector ([LSD][IPOL]) algorithm
 
 ![lsd](http://rest-term.com/labs/repos/images/lsd_apply.jpg)
 
-see also [IPOL Journal][IPOL]
+see also [blog entry][entry]
 
 ### demo
 [Line Segment Detector Demo](http://rest-term.com/labs/html5/lsd/index.html)
@@ -61,3 +61,4 @@ Copyright &copy; 2017 wellflat Licensed under the [MIT License][MIT]
 
 [MIT]: http://www.opensource.org/licenses/mit-license.php
 [IPOL]: http://www.ipol.im/pub/art/2012/gjmr-lsd/
+[entry]: http://rest-term.com/archives/3393/
