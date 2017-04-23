@@ -4,14 +4,15 @@
 
 Line detection using Line Segments Detector ([LSD][IPOL]) algorithm
 
-![lsd](http://rest-term.com/labs/repos/images/lsd_apply.jpg)
+![lsd](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/lsd_apply.jpg)
+
 
 see also [blog entry][entry]
 
 ### demo
 [Line Segment Detector Demo](http://rest-term.com/labs/html5/lsd/index.html)
 
-[![lsd_demo](http://rest-term.com/labs/repos/images/lsd_demo.jpg)](http://rest-term.com/labs/html5/lsd/index.html)
+[![lsd_demo](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/lsd_demo.jpg)](http://rest-term.com/labs/html5/lsd/index.html)
 
 ## usage in JavaScript (ES2015)
 ```js
