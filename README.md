@@ -2,7 +2,7 @@
 
 ## description
 
-Image processing and Machine learning in JavaScript and TypeScript
+Image processing and Machine learning in JavaScript
 
 ## note
 
@@ -11,6 +11,7 @@ computer vision, image processing and machine learning on the web browser or nod
 * Fast Fourier Transform (1D-FFT/IFFT, 2D-FFT/IFFT)
 * Stereo Matching
 * Poisson Image Editing
+* Line Segment Detector
 * Corner Detection
 * Fish-Eye Transform
 * Image Processing Filters (convolution, symmetric nearest neighbor, jitter)
@@ -22,14 +23,14 @@ computer vision, image processing and machine learning on the web browser or nod
 * Adaptive Regularization of Weight Vectors (AROW)
 * Soft Confidence Weighted Learning (SCW)
 * 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface ...)
-* Deep Learning (in TypeScript)
+* Deep Learning (Denoising Autoencoders)
 * etc..
 
 ## license
 
 The MIT License
 
-Copyright (c) 2014 wellflat
+Copyright (c) 2017 wellflat
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
