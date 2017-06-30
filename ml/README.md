@@ -2,7 +2,15 @@
 
 ## description
 
-Machine Learning in JavaScript and TypeScript (+ AngularJS)
+Machine Learning in JavaScript / TypeScript (+ AngularJS)
+
+### list
+- [AROW](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/arow)
+- [Decision Tree](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/decisiontree.js)
+- [Denoising Autoencoders](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/da)
+- [K-Means++](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/kmeans.js)
+- [Logistic Regression](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/logistic_regression.ts)
+- [SCW](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/scw)
 
 ### sample
 [![da](http://rest-term.com/labs/repos/images/da_demo.png)](http://rest-term.com/labs/html5/da/)
@@ -15,7 +23,7 @@ Machine Learning in JavaScript and TypeScript (+ AngularJS)
 
 (Tests: IE10, Firefox23.0, Chrome28.0, Safari6.0)
 
-### sample
+### web sample
 [Denoising Autoencoders][DenoisingAutoencoders]
 
 [Pixel Clustering using K-Means++][PixelClustering]
