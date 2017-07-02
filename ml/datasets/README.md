@@ -4,5 +4,5 @@
 
 this module embeds some small toy datasets for machine learning
 
-* Iris dataset
-* Digit dataset
+* [Iris dataset](https://archive.ics.uci.edu/ml/datasets/iris)
+* [Digit dataset](http://archive.ics.uci.edu/ml/datasets/Pen-Based+Recognition+of+Handwritten+Digits)
