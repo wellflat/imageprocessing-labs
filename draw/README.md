@@ -4,9 +4,9 @@
 
 Drawing 3D shapes (pseudo 3D)
 
-[![HTML5 Labs](http://rest-term.com/labs/repos/images/3dshape_drawing.png)](http://rest-term.com/labs/html5/)
+[![3d_drawing](http://rest-term.com/labs/repos/images/3dshape_drawing.png)](http://rest-term.com/labs/html5/)
 
-### samples
+### demo
 [Heart Surface][Heart]
 
 [Mobius Strip][Mobius]
