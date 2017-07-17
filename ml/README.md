@@ -13,13 +13,13 @@ Machine Learning in JavaScript / TypeScript (+ AngularJS)
 - [SCW](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/scw)
 
 ### sample
-[![da](http://rest-term.com/labs/repos/images/da_demo.png)](http://rest-term.com/labs/html5/da/)
+[![da](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/da_demo.png)](http://rest-term.com/labs/html5/da/)
 
 (Tests: Firefox40.0, Chrome44.0)
 
-[![pixel_clustering](http://rest-term.com/labs/repos/images/pixel_clustering.jpg)](http://rest-term.com/labs/html5/pixelclustering.html)
+[![pixel_clustering](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/pixel_clustering.jpg)](http://rest-term.com/labs/html5/pixelclustering.html)
 
-[![decision_tree](http://rest-term.com/labs/repos/images/decision_tree.png)](http://rest-term.com/labs/html5/dtree.html)
+[![decision_tree](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/decision_tree.png)](http://rest-term.com/labs/html5/dtree.html)
 
 (Tests: IE10, Firefox23.0, Chrome28.0, Safari6.0)
 
