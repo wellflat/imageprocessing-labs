@@ -1,6 +1,6 @@
-# Image processing and Machine learning labs   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+## Image processing and Machine learning labs   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
  
-## note
+### note
 
 computer vision, image processing and machine learning on the web browser or node
 
@@ -23,7 +23,7 @@ computer vision, image processing and machine learning on the web browser or nod
 * WebGL Samples
 * etc..
 
-## license
+### license
 
 The MIT License
 
