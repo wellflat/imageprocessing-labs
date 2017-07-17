@@ -7,7 +7,7 @@ Circular Fish-Eye transform
 see also [blog entry][entry]
 
 ### sample
-[![fisheye_transform](http://rest-term.com/labs/repos/images/fisheye_transform.jpg)](http://rest-term.com/labs/html5/fisheye.html)
+[![fisheye_transform](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/fisheye_transform.jpg)](http://rest-term.com/labs/html5/fisheye.html)
 
 (Tests: IE9, Firefox16.0, Chrome21.0, Safari6.0, Opera12.0)
 

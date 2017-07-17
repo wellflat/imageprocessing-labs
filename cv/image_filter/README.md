@@ -6,15 +6,15 @@ Image processing filters
 
 * Convolution Filter
 
-[![HTML5 Labs](http://rest-term.com/labs/repos/images/convolution_filter.jpg)](http://rest-term.com/labs/html5/convolution.html)
+[![image_filter](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/convolution_filter.jpg)](http://rest-term.com/labs/html5/convolution.html)
 
 * Symmetric Nearest Neighbor Filter
 
-[![HTML5 Labs](http://rest-term.com/labs/repos/images/snn_filter.jpg)](http://rest-term.com/labs/html5/snn.html)
+[![image_filter](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/snn_filter.jpg)](http://rest-term.com/labs/html5/snn.html)
 
 * Jitter Jilter
 
-[![HTML5 Labs](http://rest-term.com/labs/repos/images/jitter_filter.jpg)](http://rest-term.com/labs/html5/jitter.html)
+[![image_filter](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/jitter_filter.jpg)](http://rest-term.com/labs/html5/jitter.html)
 
 ### samples
 [Convolution Filter][Convolution]

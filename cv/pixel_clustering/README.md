@@ -7,7 +7,7 @@ Pixel clustering using k-means++ algorithm
 see also [blog entry][entry]
 
 ### sample
-[![pixel_clustering](http://rest-term.com/labs/repos/images/pixel_clustering.jpg)](http://rest-term.com/labs/html5/pixelclustering.html)
+[![pixel_clustering](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/pixel_clustering.jpg)](http://rest-term.com/labs/html5/pixelclustering.html)
 
 (Tests: IE10, Firefox23.0, Chrome28.0, Safari6.0)
 

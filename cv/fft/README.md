@@ -7,7 +7,7 @@
 see also [blog entry][entry]
 
 ### sample
-[![2d_fft](http://rest-term.com/labs/repos/images/fft_filter.jpg)](http://rest-term.com/labs/html5/fft.html)
+[![2d_fft](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/fft_filter.jpg)](http://rest-term.com/labs/html5/fft.html)
 
 (Tests: IE9, Firefox8.0, Chrome16.0, Safari5.0, Opera11.60)
 
