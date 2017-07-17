@@ -1,9 +1,7 @@
 # Image processing and Machine learning labs
 
-## description
-
-Image processing and Machine learning in JavaScript
-
+ [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+ 
 ## note
 
 computer vision, image processing and machine learning on the web browser or node
