@@ -1,8 +1,8 @@
 ## Image processing and Machine learning labs   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
- 
-### note
 
 computer vision, image processing and machine learning on the web browser or node
+
+### note
 
 * Fast Fourier Transform (1D/2D-FFT)
 * Stereo Matching
