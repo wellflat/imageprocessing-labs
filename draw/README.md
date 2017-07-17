@@ -4,7 +4,7 @@
 
 Drawing 3D shapes (pseudo 3D)
 
-[![3d_drawing](http://rest-term.com/labs/repos/images/3dshape_drawing.png)](http://rest-term.com/labs/html5/)
+[![3d_drawing](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/3dshape_drawing.png)](http://rest-term.com/labs/html5/)
 
 ### demo
 [Heart Surface][Heart]
