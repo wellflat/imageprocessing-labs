@@ -1,18 +1,16 @@
-# Image processing and Machine learning labs
-
- [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+# Image processing and Machine learning labs   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
  
 ## note
 
 computer vision, image processing and machine learning on the web browser or node
 
-* Fast Fourier Transform (1D-FFT/IFFT, 2D-FFT/IFFT)
+* Fast Fourier Transform (1D/2D-FFT)
 * Stereo Matching
 * Poisson Image Editing
 * Line Segment Detector
 * Corner Detection
 * Fish-Eye Transform
-* Image Processing Filters (convolution, symmetric nearest neighbor, jitter)
+* Image Processing Filters
 * Image Histogram Calculation
 * Image Feature Extraction
 * Decision Tree Learning
@@ -20,8 +18,9 @@ computer vision, image processing and machine learning on the web browser or nod
 * Logistic Regression
 * Adaptive Regularization of Weight Vectors (AROW)
 * Soft Confidence Weighted Learning (SCW)
+* Neural Network (Denoising Autoencoders)
 * 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface ...)
-* Deep Learning (Denoising Autoencoders)
+* WebGL Samples
 * etc..
 
 ## license
