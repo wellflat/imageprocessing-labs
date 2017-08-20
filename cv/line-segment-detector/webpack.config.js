@@ -1,24 +1,25 @@
 const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
-    entry: __dirname + '/src/lsd.ts',
+    entry: path.join(__dirname, './src/lsd.ts'),
     output: {
-        path: __dirname + '/dst',
+        path: path.join(__dirname, './dst'),
         filename: 'lsd.js',
-        library: "lineSegmentDetector",
-        libraryTarget: "umd",
+        library: 'lineSegmentDetector',
+        libraryTarget: 'umd'
     },
     module: {
         rules: [
             {
                 test: /\.ts$/,
                 exclude: /(node_modules|bower_components)/,
-                loader: 'ts-loader',
-            },
+                loader: 'ts-loader'
+            }
         ]
     },
     resolve: {
         extensions: ['.js', '.ts']
     },
-    devtool: 'source-map',
+    devtool: 'source-map'
 };
