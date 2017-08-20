@@ -1,45 +1,24 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
-    entry: __dirname + '/src/app.js',
+    entry: __dirname + '/src/lsd.js',
     output: {
         path: __dirname + '/dst',
-        filename: 'bundle.js',
+        filename: 'lsd.js',
+        library: "lineSegmentDetector",
+        libraryTarget: "umd",
     },
     module: {
-        loaders: [
+        rules: [
             {
-                test: /\.js[x]?$/,
+                test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel-loader',
-                query: {
-                    presets: ['es2015', 'react'],//, 'react-hmre']
+                options: {
+                    presets: ['es2015'],
                 }
             },
-            {
-                test: /\.html$/,
-                loader: 'html-loader'
-            },
-            {
-                test: /\.(jpg|png)$/,
-                loader: 'url-loader'
-            }
         ]
     },
-    resolve: {
-        extensions: ['.js', '.jsx']
-    },
-    devServer: {
-        contentBase: '/dst',
-        port: 8888
-    },
     devtool: 'source-map',
-    plugins: [
-        new HtmlWebpackPlugin({
-            title: "React Sample",
-            filename: 'index.html',
-            template: __dirname + '/src/index.html'
-        })    
-    ]
 };

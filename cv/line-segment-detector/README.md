@@ -9,6 +9,12 @@ Line detection using Line Segment Detector ([LSD][IPOL]) algorithm
 
 see also [blog entry][entry]
 
+## install
+
+```
+npm install line-segment-detector.js
+```
+
 ### demo
 [Line Segment Detector Demo](http://rest-term.com/labs/html5/lsd/index.html) [(mirror)](https://secret-nether-5891.herokuapp.com/lsd/)
 

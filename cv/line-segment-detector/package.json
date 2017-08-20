@@ -1,46 +1,33 @@
 {
-  "name": "lsd",
+  "name": "line-segment-detector.js",
   "version": "1.0.0",
   "description": "Line Segment Detector",
-  "main": "src/app.js",
+  "main": "./dst/lsd.js",
+  "files": [
+    "dst"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prod": "node_modules/.bin/webpack -p",
-    "dev": "node_modules/.bin/webpack -d",
-    "start": "node_modules/.bin/webpack-dev-server --hot --inline"
+    "prod": "rimraf dst && webpack -p",
+    "dev": "rimraf dst && webpack -d",
+    "prepublish": "npm run prod"
   },
   "keywords": [],
   "author": "wellflat",
-  "license": "ISC",
+  "license": "MIT",
   "babel": {
     "presets": [
-      "es2015",
-      "react"
+      "es2015"
     ]
   },
-  "dependencies": {
-    "material-ui": "^0.17.4",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-tap-event-plugin": "^2.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "babel": "^6.5.2",
-    "babel-core": "^6.21.0",
-    "babel-loader": "^6.2.10",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-react": "^6.16.0",
-    "babel-preset-react-hmre": "^1.1.1",
-    "babel-register": "^6.18.0",
-    "eslint": "^3.0.0",
-    "eslint-plugin-react": "^6.9.0",
-    "file-loader": "^0.11.0",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2",
-    "html-loader": "^0.4.4",
-    "html-webpack-plugin": "^2.26.0",
-    "url-loader": "^0.5.7",
-    "webpack": "^2.4.1",
-    "webpack-dev-server": "^2.4.2"
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^4.5.0",
+    "rimraf": "^2.6.1",
+    "webpack": "^3.5.5"
   }
 }
