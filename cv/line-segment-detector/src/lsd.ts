@@ -25,41 +25,25 @@ import { Vec4, Point, CoorList, RegionPoint, Rect, Edge } from './types';
  * @param nBins        Number of bins in pseudo-ordering of gradient modulus.
  */
 export default class LSD {
+    image?: ImageData;
+    private imageData?: Uint8ClampedArray;
+    width = 0;
+    height = 0;
+    list: CoorList[] = [];
+    angles?: Float64Array;
+    modgrad?: Float64Array;
+    used?: Uint8Array;
+
     constructor(
-        refineType = funcs.REFINE_NONE, scale = 0.8, sigmaScale = 0.6, quant = 2.0,
-        angTh = 22.5, logEps = 0.0, densityTh = 0.7, nBins = 1024
-    ) {
-        this.refineType = refineType;
-        this.scale = scale;
-        this.sigmaScale = sigmaScale;
-        this.quant = quant;
-        this.angTh = angTh;
-        this.logEps = logEps;
-        this.densityTh = densityTh;
-        this.nBins = nBins;
-        /** @type {ImageData} */
-        this.image = null;
-        /** @private @type {Uint8ClampedArray} */
-        this.imageData = null;
-        /** @type {number} */
-        this.width = 0;
-        /** @type {number} */
-        this.height = 0;
-        /** @type {CoorList[]} */
-        this.list = [];
-        /** @type {Float64Array} */
-        this.angles = null;
-        /** @type {Float64Array} */
-        this.modgrad = null;
-        /** @type {Uint8Array} */
-        this.used = null; 
-    }
+        public refineType = funcs.REFINE_NONE, public scale = 0.8, public sigmaScale = 0.6, public quant = 2.0,
+        public angTh = 22.5, public logEps = 0.0, public densityTh = 0.7, public nBins = 1024
+    ) { }
     /**
      * Detect lines in the input image.
      * @param {ImageData} image
      * @return {Vec4[]}
      */
-    detect(image) {
+    detect(image: ImageData) {
         this.image = image;
         this.width = image.width;
         this.height = image.height;
@@ -72,7 +56,7 @@ export default class LSD {
      * @param {Vec4[]} lines
      * @param {string} color
      */
-    drawSegments(context, lines, color = '#ff0000') {
+    drawSegments(context: CanvasRenderingContext2D, lines: Vec4[], color = '#ff0000') {
         context.strokeStyle = color;
         context.lineWidth = 1;
         lines.forEach(v => {
@@ -86,13 +70,14 @@ export default class LSD {
 
     /**
      * for debug
-     * @param {CanvasRenderingContext2D} context 
-     */    
-    putImageData(context) {
+     * @param {CanvasRenderingContext2D} context
+     */
+    putImageData(context: CanvasRenderingContext2D) {
         let src = this.imageData,
             image = context.createImageData(this.width, this.height),
             dst = image.data,
             len = image.data.length;
+        if (!src) throw new Error('imageData required'); // type guard
         for (let i = 0; i < len; i += 4) {
             dst[i] = dst[i + 1] = dst[i + 2] = src[i/4];
             dst[i + 3] = 255;
@@ -105,6 +90,7 @@ export default class LSD {
      *                   Returned lines are strictly oriented depending on the gradient.
      */
     lsd() {
+        if (!this.image || !this.angles) throw new Error('image and angles required'); // type guard
         /** @type {Vec4[]} */
         let lines = [];
         const prec = Math.PI * this.angTh / 180;
@@ -132,8 +118,7 @@ export default class LSD {
             if ((this.at(this.used, point) === funcs.NOT_USED) &&
                 (this.at(this.angles, point) !== funcs.NOT_DEF)) {
                 let regAngle = 0.0;
-                /** @type {RegionPoint[]} */
-                let reg = [];
+                let reg: RegionPoint[] = [];
                 regAngle = this.regionGrow(this.list[i].p, reg, regAngle, prec);
                 if (reg.length < minRegSize) {
                     continue;
@@ -175,8 +160,9 @@ export default class LSD {
      * @param {number} threshold The minimum value of the angle that is considered defined, otherwise NOTDEF
      * @param {number} nBins     The number of bins with which gradients are ordered by, using bucket sort.
      */
-    computeLevelLineAngles(threshold, nBins) {
+    computeLevelLineAngles(threshold: number, nBins: number) {
         const imageData = this.imageData;
+        if (!imageData) throw new Error('imageData required'); // type guard
         const width = this.width;
         const height = this.height;
         this.angles = new Float64Array(imageData.length);
@@ -248,13 +234,8 @@ export default class LSD {
         }
     }
 
-    /**
-     * @param {Point} s
-     * @param {RegionPoint[]} reg
-     * @param {number} regAngle
-     * @param {number} prec
-     */
-    regionGrow(s, reg, regAngle, prec) {
+    regionGrow(s: Point, reg: RegionPoint[], regAngle: number, prec: number) {
+        if (!this.used || !this.angles || !this.modgrad) throw new Error('used, angles and modgrad required'); // type guard
         let seed = new RegionPoint();
         seed.x = s.x;
         seed.y = s.y;
@@ -295,18 +276,11 @@ export default class LSD {
         return regAngle;
     }
 
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} theta
-     * @param {number} prec
-     * @return {boolean}
-     */
-    isAligned(x, y, theta, prec) {
+    isAligned(x: number, y: number, theta: number, prec: number) {
         if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
             return false;
         }
-        const a = this.angles[x + y * this.width];
+        const a = this.angles![x + y * this.width];
         if (a === funcs.NOT_DEF) {
             return false;
         }
@@ -323,14 +297,7 @@ export default class LSD {
         return nTheta <= prec;
     }
 
-    /**
-     * @param {RegionPoint[]} reg
-     * @param {number} regAngle
-     * @param {number} prec
-     * @param {number} p
-     * @param {Rect} rec
-     */
-    region2Rect(reg, regAngle, prec, p, rec) {
+    region2Rect(reg: RegionPoint[], regAngle: number, prec: number, p: number, rec: Rect) {
         let x = 0, y = 0, sum = 0;
         for (let i = 0; i < reg.length; i++) {
             const pnt = reg[i];
@@ -381,15 +348,7 @@ export default class LSD {
         }
     }
 
-    /**
-     * @param {RegionPoint[]} reg
-     * @param {number} x
-     * @param {number} y
-     * @param {number} regAngle
-     * @param {number} prec
-     * @return {number}
-     */
-    getTheta(reg, x, y, regAngle, prec) {
+    getTheta(reg: RegionPoint[], x: number, y: number, regAngle: number, prec: number) {
         let ixx = 0.0,
             iyy = 0.0,
             ixy = 0.0;
@@ -416,16 +375,7 @@ export default class LSD {
         return theta;
     }
 
-    /**
-     * @param {RegionPoint[]} reg
-     * @param {number} regAngle
-     * @param {number} prec
-     * @param {number} p
-     * @param {Rect} rec
-     * @param {number} densityTh
-     * @return {boolean}
-     */    
-    refine(reg, regAngle, prec, p, rec, densityTh) {
+    refine(reg: RegionPoint[], regAngle: number, prec: number, p: number, rec: Rect, densityTh: number) {
         let density = reg.length / (funcs.dist(rec.x1, rec.y1, rec.x2, rec.y2) * rec.width);
         if (density >= densityTh) {
             return true;
@@ -436,7 +386,7 @@ export default class LSD {
         let sum = 0, sSum = 0, n = 0;
         for (let i = 0; i < reg.length; i++) {
             reg[i].used = funcs.NOT_USED;
-            if (funcs.dist(xc, yc, reg[i].x, reg[i].y) < reg.width) {
+            if (funcs.dist(xc, yc, reg[i].x, reg[i].y) < rec.width) {
                 const angle = reg[i].angle;
                 let angD = funcs.angleDiff(angle, angC);
                 sum += angD;
@@ -457,19 +407,10 @@ export default class LSD {
                 return true;
             }
         }
+        return false; // type guard (unreachable)
     }
 
-    /**
-     * @param {RegionPoint[]} reg
-     * @param {number} regAngle
-     * @param {number} prec
-     * @param {number} p
-     * @param {Rect} rec
-     * @param {number} density
-     * @param {number} densityTh
-     * @return {boolean}
-     */    
-    reduceRegionRadius(reg, regAngle, prec, p, rec, density, densityTh) {
+    reduceRegionRadius(reg: RegionPoint[], regAngle: number, prec: number, p: number, rec: Rect, density: number, densityTh: number) {
         let xc = reg[0].x;
         let yc = reg[0].y;
         let radSq1 = funcs.distSq(xc, yc, rec.x1, rec.y1);
@@ -497,11 +438,7 @@ export default class LSD {
         return true;
     }
 
-    /**
-     * @param {Rect} rect
-     * @return {number}
-     */    
-    improveRect(rect) {
+    improveRect(rect: Rect) {
         let delta = 0.5;
         let delta2 = delta / 2.0;
         let logNfa = this.rectNfa(rect);
@@ -569,11 +506,7 @@ export default class LSD {
         return logNfa;
     }
 
-    /**
-     * @param {Rect} rect
-     * @return {number}
-     */    
-    rectNfa(rect) {
+    rectNfa(rect: Rect) {
         let totalPts = 0,
             algPts = 0,
             halfWidth = rect.width / 2.0,
@@ -597,7 +530,7 @@ export default class LSD {
         orderedX[3].p.y = rect.y1 - dxhw;
 
         orderedX.sort(funcs.AsmallerB_XoverY);
-        
+
         for (let i = 1; i < 4; i++) {
             if (minY.p.y > orderedX[i].p.y) {
                 minY = orderedX[i];
@@ -617,6 +550,7 @@ export default class LSD {
                 }
             }
         }
+        if (!leftmost) throw new Error('leftmost error'); // type guard
         leftmost.taken = true;
         let rightmost = null;
         for (let i = 0; i < 4; i++) {
@@ -628,6 +562,7 @@ export default class LSD {
                 }
             }
         }
+        if (!rightmost) throw new Error('rightmost error'); // type guard
         rightmost.taken = true;
         let tailp = null;
         for (let i = 0; i < 4; i++) {
@@ -639,6 +574,7 @@ export default class LSD {
                 }
             }
         }
+        if (!tailp) throw new Error('tailp error'); // type guard
         tailp.taken = true;
         let flstep = (minY.p.y != leftmost.p.y) ?
             (minY.p.x + leftmost.p.x) / (minY.p.y - leftmost.p.y) : 0;
@@ -677,12 +613,7 @@ export default class LSD {
         return this.nfa(totalPts, algPts, rect.p);
     }
 
-    /**
-     * @param {number} n
-     * @param {number} k
-     * @param {number} p
-     */    
-    nfa(n, k, p) {
+    nfa(n: number, k: number, p: number) {
         if (n == 0 || k == 0) {
             return -(funcs.LOG_NT);
         }
@@ -718,23 +649,17 @@ export default class LSD {
         return -Math.log10(binTail) - funcs.LOG_NT;
     }
 
-    /**
-     * @param {Uint8ClampedArray} imageData
-     * @param {number} kSize
-     * @param {number} sigma
-     * @return {Uint8ClampedArray}
-     */    
-    gaussianBlur(imageData, kSize, sigma) {
+    gaussianBlur(imageData: Uint8ClampedArray, kSize: number, sigma: number) {
         let width = this.width,
             height = this.height,
             src = imageData,
             ctx = document.createElement('canvas').getContext('2d'),
-            tmp = ctx.createImageData(width, height),
+            tmp = ctx!.createImageData(width, height),
             dst = null,
             kernel = this.getGaussianKernel(kSize, sigma),
             r = (kSize - 1) / 2;
-        tmp = this.reshape(tmp);
-        dst = new Uint8ClampedArray(tmp.length);
+        const tmp2 = this.reshape(tmp);
+        dst = new Uint8ClampedArray(tmp2.length);
         // separate 2d-filter
         for (let y = 0; y < height; y++) {
             let step = y * width;
@@ -751,10 +676,10 @@ export default class LSD {
                     buff += src[j] * kernel[k];
                     k++;
                 }
-                tmp[i] = buff;
+                tmp2[i] = buff;
             }
         }
-        
+
         for (let x = 0; x < width; x++) {
             for (let y = 0; y < height; y++) {
                 let step = y * width;
@@ -769,7 +694,7 @@ export default class LSD {
                         kStep = 0;
                     }
                     let j = i + kStep;
-                    buff += tmp[j] * kernel[k];
+                    buff += tmp2[j] * kernel[k];
                     k++;
                 }
                 dst[i] = buff;
@@ -778,12 +703,7 @@ export default class LSD {
         return dst;
     }
 
-    /**
-     * @param {number} kSize
-     * @param {number} sigma
-     * @return {number[]}
-     */
-    getGaussianKernel(kSize, sigma) {
+    getGaussianKernel(kSize: number, sigma: number) {
         // 1d-kernel
         let kernel = [];
         let sigmaX = sigma > 0 ? sigma : ((kSize - 1) * 0.5 - 1) * 0.3 + 0.8;
@@ -800,11 +720,8 @@ export default class LSD {
         }
         return kernel;
     }
-    /**
-     * @param {ImageData} image
-     * @return {Uint8ClampedArray}
-     */
-    reshape(image) {
+
+    reshape(image: ImageData) {
         let src = image.data;
         let reshaped = new Uint8ClampedArray(src.length / 4);
         let len = reshaped.length;
@@ -818,43 +735,28 @@ export default class LSD {
      * @param {ImageData} image
      * @param {number} scale
      * @return {ImageData}
-     */    
-    resize(image, scale) {
+     */
+    resize(image: ImageData, scale: number) {
         let ctx = document.createElement('canvas').getContext('2d'),
             dstWidth = image.width * scale,
             dstHeight = image.height * scale;
-        ctx.canvas.width = dstWidth;
-        ctx.canvas.height = dstHeight;
-        ctx.drawImage(this.imageElement, 0, 0, image.width, image.height, 0, 0, dstWidth, dstHeight);
-        let resizedData = ctx.getImageData(0, 0, dstWidth, dstHeight);
+        ctx!.canvas.width = dstWidth;
+        ctx!.canvas.height = dstHeight;
+        ctx!.drawImage(this.imageElement, 0, 0, image.width, image.height, 0, 0, dstWidth, dstHeight);
+        let resizedData = ctx!.getImageData(0, 0, dstWidth, dstHeight);
         return resizedData;
     }
-    
 
-    /**
-     * @param {Uint8Array|Float64Array} data
-     * @param {Point} p 
-     */
-    at(data, p) {
+    at(data: Uint8Array|Float64Array, p: Point) {
         return data[p.x + (p.y * this.width)];
     }
 
-    /**
-     * @param {Float64Array} data
-     * @param {number} rowIndex
-     */
-    row(data, rowIndex) {
-        let i = rowIndex * this.width; 
+    row(data: Float64Array, rowIndex: number) {
+        let i = rowIndex * this.width;
         return data.subarray(i, i + this.width);
     }
 
-    /**
-     * @param {Float64Array} data
-     * @param {number} index
-     * @param {number} value
-     * @return {null}
-     */
-    setRow(data, index, value) {
+    setRow(data: Float64Array, index: number, value: number) {
         let from = index * this.width;
         let to = from + this.width;
         for (let i = from; i < to; i++) {
@@ -863,13 +765,7 @@ export default class LSD {
         return data;
     }
 
-    /**
-     * @param {Float64Array} data
-     * @param {number} index
-     * @param {number} value
-     * @return {null}
-     */
-    setCol(data, index, value) {
+    setCol(data: Float64Array, index: number, value: number) {
         let to = this.height * this.width;
         let step = this.width;
         for (let i = index; i < to; i += step) {

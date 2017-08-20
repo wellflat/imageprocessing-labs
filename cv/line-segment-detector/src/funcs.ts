@@ -1,3 +1,5 @@
+import { Edge } from './types';
+
 /**
  * constants and utility math functions
  */
@@ -15,13 +17,13 @@ const REFINE_STD = 1;
 const REFINE_ADV = 2;
 
 
-const logGamma = x => x > 15.0 ? logGammaWindschitl(x) : logGammaLanczos(x);
+const logGamma = (x: number) => x > 15.0 ? logGammaWindschitl(x) : logGammaLanczos(x);
 
-const logGammaWindschitl = x =>
+const logGammaWindschitl = (x: number) =>
     0.918938533204673 + (x - 0.5) * Math.log(x) - x
     + 0.5 * x * Math.log(x * Math.sinh(1 / x) + 1 / (810.0 * Math.pow(x, 6.0)));
 
-function logGammaLanczos(x) {
+function logGammaLanczos(x: number) {
     const q = [
         75122.6331530, 80916.6278952, 36308.2951477,
         8687.24529705, 1168.92649479, 83.8676043424,
@@ -36,18 +38,12 @@ function logGammaLanczos(x) {
     return a + Math.log(b);
 }
 
-const distSq = (x1, x2, y1, y2) =>
+const distSq = (x1: number, x2: number, y1: number, y2: number) =>
     (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
 
-const dist = (x1, x2, y1, y2) => Math.sqrt(distSq(x1, y1, x2, y2));
+const dist = (x1: number, x2: number, y1: number, y2: number) => Math.sqrt(distSq(x1, y1, x2, y2));
 
-
-/**
- * @param {number} a
- * @param {number} b
- * @return {number}
- */
-function angleDiffSigned(a, b) {
+function angleDiffSigned(a: number, b: number) {
     let diff = a - b;
     const PI = Math.PI;
     while (diff <= -PI) {
@@ -59,22 +55,12 @@ function angleDiffSigned(a, b) {
     return diff;
 }
 
-/**
- * @param {number} a
- * @param {number} b
- * @return {number}
- */
-function angleDiff(a, b) {
+function angleDiff(a: number, b: number) {
     const value = angleDiffSigned(a, b);
     return value >= 0  ? value : -value;
 }
 
-/**
- * @param {number} a
- * @param {number} b
- * @return {number}
- */
-function doubleEqual(a, b) {
+function doubleEqual(a: number, b: number) {
     if (a == b) {
         return true;
     }
@@ -90,16 +76,11 @@ function doubleEqual(a, b) {
     return (absDiff / absMax) <= (RELATIVE_ERROR_FACTOR * Number.EPSILON);
 }
 
-/**
- * 
- * @param {Edge} a
- * @param {Edge} b
- */
-function AsmallerB_XoverY(a, b) {
+function AsmallerB_XoverY(a: Edge, b: Edge) {
     if (a.p.x == b.p.x) {
-        return a.p.y < b.p.y;
+        return Number(a.p.y < b.p.y);
     } else {
-        return a.p.x < b.p.x;
+        return Number(a.p.x < b.p.x);
     }
 }
 

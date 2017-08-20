@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 
 module.exports = {
-    entry: __dirname + '/src/lsd.js',
+    entry: __dirname + '/src/lsd.ts',
     output: {
         path: __dirname + '/dst',
         filename: 'lsd.js',
@@ -11,14 +11,14 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.ts$/,
                 exclude: /(node_modules|bower_components)/,
-                loader: 'babel-loader',
-                options: {
-                    presets: ['es2015'],
-                }
+                loader: 'ts-loader',
             },
         ]
+    },
+    resolve: {
+        extensions: ['.js', '.ts']
     },
     devtool: 'source-map',
 };
