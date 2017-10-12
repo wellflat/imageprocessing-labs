@@ -10,7 +10,7 @@ Line detection using Line Segment Detector ([LSD][IPOL]) algorithm
 see also [blog entry][entry]
 
 ### demo
-[Line Segment Detector Demo](http://rest-term.com/labs/html5/lsd/index.html) [(mirror)](https://secret-nether-5891.herokuapp.com/lsd/)
+[Line Segment Detector Demo](http://rest-term.com/labs/html5/lsd/index.html) [(mirror)](https://secret-nether-01.herokuapp.com/lsd/)
 
 [![lsd_demo](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/lsd_demo.jpg)](http://rest-term.com/labs/html5/lsd/index.html)
 
