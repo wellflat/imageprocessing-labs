@@ -1,0 +1,32 @@
+{
+  "name": "gradient_boosting",
+  "version": "1.0.0",
+  "description": "Gradient Boosting Regression Tree Module",
+  "main": "dst",
+  "scripts": {
+    "build": "babel src -s -D -d dst --presets es2015",
+    "start": "node dst",
+    "prestart": "npm run -s build",
+    "test": "eslint src",
+    "debug": "npm run -s build && node --nolazy --inspect-brk=9229 dst"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^4.7.2",
+    "nodemon": "^1.12.1",
+    "source-map-support": "^0.5.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
+  "keywords": [
+    "machine learning"
+  ],
+  "author": "wellflat",
+  "license": "MIT"
+}
