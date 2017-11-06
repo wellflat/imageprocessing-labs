@@ -11,6 +11,7 @@ Machine Learning in JavaScript / TypeScript (+ AngularJS)
 - [K-Means++](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/kmeans.js)
 - [Logistic Regression](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/logistic_regression.ts)
 - [SCW](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/scw)
+- [GBDT](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/gbdt)
 
 ### sample
 [![da](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/da_demo.png)](http://rest-term.com/labs/html5/da/)

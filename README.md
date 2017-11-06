@@ -18,6 +18,7 @@ computer vision, image processing and machine learning on the web browser or nod
 * Logistic Regression
 * Adaptive Regularization of Weight Vectors (AROW)
 * Soft Confidence Weighted Learning (SCW)
+* Gradient Boosting Decision Tree (GBDT)
 * Neural Network (Denoising Autoencoders)
 * 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface ...)
 * WebGL Samples
