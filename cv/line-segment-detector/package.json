@@ -1,0 +1,27 @@
+{
+  "name": "line-segment-detector.js",
+  "version": "1.0.0",
+  "description": "Line Segment Detector",
+  "main": "./dst/lsd.js",
+  "types": "./dst/lsd.d.ts",
+  "files": [
+    "dst"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "rimraf dst && webpack -p",
+    "dev": "rimraf dst && webpack -d",
+    "prepublish": "npm run prod"
+  },
+  "keywords": [],
+  "author": "wellflat",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^4.5.0",
+    "rimraf": "^2.6.1",
+    "ts-loader": "^2.3.3",
+    "typescript": "^2.4.2",
+    "webpack": "^3.5.5"
+  }
+}
