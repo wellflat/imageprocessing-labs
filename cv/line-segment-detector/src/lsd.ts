@@ -101,7 +101,6 @@ export default class LSD {
             const sprec = 3;
             const h = Math.ceil(sigma * Math.sqrt(2 * sprec * Math.log(10.0)));
             const kSize = 1 + 2 * h;
-            //let resized = this.resize(this.image, this.scale);
             const reshaped = this.reshape(this.image);
             this.imageData = this.gaussianBlur(reshaped, kSize, sigma);
             this.computeLevelLineAngles(rho, this.nBins);
@@ -123,34 +122,34 @@ export default class LSD {
                 if (reg.length < minRegSize) {
                     continue;
                 }
-                let rec = new Rect();
-                this.region2Rect(reg, regAngle, prec, p, rec);
+                let rect = new Rect();
+                this.region2Rect(reg, regAngle, prec, p, rect);
                 let logNfa = -1;
                 if (this.refineType > funcs.REFINE_NONE) {
-                    if (!this.refine(reg, regAngle, prec, p, rec, this.densityTh)) {
+                    if (!this.refine(reg, regAngle, prec, p, rect, this.densityTh)) {
                         continue;
                     }
                     if (this.refineType >= funcs.REFINE_ADV) {
-                        logNfa = this.improveRect(rec);
+                        logNfa = this.improveRect(rect);
                         if (logNfa <= this.logEps) {
                             continue;
                         }
                     }
                 }
-                rec.x1 += 0.5;
-                rec.y1 += 0.5;
-                rec.x2 += 0.5;
-                rec.y2 += 0.5;
+                rect.x1 += 0.5;
+                rect.y1 += 0.5;
+                rect.x2 += 0.5;
+                rect.y2 += 0.5;
                 /*
                 if (this.scale != 1) {
-                    rec.x1 /= this.scale;
-                    rec.y1 /= this.scale;
-                    rec.x2 /= this.scale;
-                    rec.y2 /= this.scale;
-                    rec.width /= this.scale;
+                    rect.x1 /= this.scale;
+                    rect.y1 /= this.scale;
+                    rect.x2 /= this.scale;
+                    rect.y2 /= this.scale;
+                    rect.width /= this.scale;
                 }
                 */
-                lines.push(new Vec4(rec.x1, rec.y1, rec.x2, rec.y2));
+                lines.push(new Vec4(rect.x1, rect.y1, rect.x2, rect.y2));
             }
         }
         return lines;
@@ -213,7 +212,7 @@ export default class LSD {
                     count++;
                 }
                 rangeE[i].p = new Point(x, y);
-                rangeE[i].next = 0;
+                rangeE[i].next = null;
             }
         }
         let idx = nBins - 1;
@@ -297,7 +296,7 @@ export default class LSD {
         return nTheta <= prec;
     }
 
-    region2Rect(reg: RegionPoint[], regAngle: number, prec: number, p: number, rec: Rect) {
+    region2Rect(reg: RegionPoint[], regAngle: number, prec: number, p: number, rect: Rect) {
         let x = 0, y = 0, sum = 0;
         for (let i = 0; i < reg.length; i++) {
             const pnt = reg[i];
@@ -331,20 +330,20 @@ export default class LSD {
                 wMin = w;
             }
         }
-        rec.x1 = x + lMin * dx;
-        rec.y1 = y + lMin * dy;
-        rec.x2 = x + lMax * dx;
-        rec.y2 = y + lMax * dy;
-        rec.width = wMax - wMin;
-        rec.x = x;
-        rec.y = y;
-        rec.theta = theta;
-        rec.dx = dx;
-        rec.dy = dy;
-        rec.prec = prec;
-        rec.p = p;
-        if (rec.width < 1.0) {
-            rec.width = 1.0;
+        rect.x1 = x + lMin * dx;
+        rect.y1 = y + lMin * dy;
+        rect.x2 = x + lMax * dx;
+        rect.y2 = y + lMax * dy;
+        rect.width = wMax - wMin;
+        rect.x = x;
+        rect.y = y;
+        rect.theta = theta;
+        rect.dx = dx;
+        rect.dy = dy;
+        rect.prec = prec;
+        rect.p = p;
+        if (rect.width < 1.0) {
+            rect.width = 1.0;
         }
     }
 
@@ -375,8 +374,8 @@ export default class LSD {
         return theta;
     }
 
-    refine(reg: RegionPoint[], regAngle: number, prec: number, p: number, rec: Rect, densityTh: number) {
-        let density = reg.length / (funcs.dist(rec.x1, rec.y1, rec.x2, rec.y2) * rec.width);
+    refine(reg: RegionPoint[], regAngle: number, prec: number, p: number, rect: Rect, densityTh: number) {
+        let density = reg.length / (funcs.dist(rect.x1, rect.y1, rect.x2, rect.y2) * rect.width);
         if (density >= densityTh) {
             return true;
         }
@@ -386,7 +385,7 @@ export default class LSD {
         let sum = 0, sSum = 0, n = 0;
         for (let i = 0; i < reg.length; i++) {
             reg[i].used = funcs.NOT_USED;
-            if (funcs.dist(xc, yc, reg[i].x, reg[i].y) < rec.width) {
+            if (funcs.dist(xc, yc, reg[i].x, reg[i].y) < rect.width) {
                 const angle = reg[i].angle;
                 let angD = funcs.angleDiff(angle, angC);
                 sum += angD;
@@ -399,10 +398,10 @@ export default class LSD {
             if (reg.length < 2) {
                 return false;
             }
-            this.region2Rect(reg, regAngle, prec, p, rec);
-            density = reg.length / (funcs.dist(rec.x1, rec.y1, rec.x2, rec.y2) * rec.width);
+            this.region2Rect(reg, regAngle, prec, p, rect);
+            density = reg.length / (funcs.dist(rect.x1, rect.y1, rect.x2, rect.y2) * rect.width);
             if (density < densityTh) {
-                return this.reduceRegionRadius(reg, regAngle, prec, p, rec, density, densityTh);
+                return this.reduceRegionRadius(reg, regAngle, prec, p, rect, density, densityTh);
             } else {
                 return true;
             }
@@ -410,11 +409,11 @@ export default class LSD {
         return false; // type guard (unreachable)
     }
 
-    reduceRegionRadius(reg: RegionPoint[], regAngle: number, prec: number, p: number, rec: Rect, density: number, densityTh: number) {
+    reduceRegionRadius(reg: RegionPoint[], regAngle: number, prec: number, p: number, rect: Rect, density: number, densityTh: number) {
         let xc = reg[0].x;
         let yc = reg[0].y;
-        let radSq1 = funcs.distSq(xc, yc, rec.x1, rec.y1);
-        let radSq2 = funcs.distSq(xc, yc, rec.x2, rec.y2);
+        let radSq1 = funcs.distSq(xc, yc, rect.x1, rect.y1);
+        let radSq2 = funcs.distSq(xc, yc, rect.x2, rect.y2);
         let radSq = radSq1 > radSq2 ? radSq1 : radSq2;
         while (density < densityTh) {
             radSq *= 0.75 * 0.75; // reduce region's radius to 75%
@@ -432,8 +431,8 @@ export default class LSD {
             if (reg.length < 2) {
                 return false;
             }
-            this.region2Rect(reg, regAngle, prec, p, rec);
-            density = reg.length / (funcs.dist(rec.x1, rec.y1, rec.x2, rec.y2) * rec.width);
+            this.region2Rect(reg, regAngle, prec, p, rect);
+            density = reg.length / (funcs.dist(rect.x1, rect.y1, rect.x2, rect.y2) * rect.width);
         }
         return true;
     }
@@ -604,7 +603,7 @@ export default class LSD {
             if (y >= leftmost.p.y) {
                 lstep = slstep;
             }
-            if (y >= rightX.p.y) {
+            if (y >= rightmost.p.y) {
                 rstep = srstep;
             }
             leftX += lstep;
@@ -614,11 +613,12 @@ export default class LSD {
     }
 
     nfa(n: number, k: number, p: number) {
+        const LOG_NT =  5 * (Math.log10(this.width) + Math.log10(this.height)) / 2 + Math.log10(11.0);
         if (n == 0 || k == 0) {
-            return -(funcs.LOG_NT);
+            return -LOG_NT;
         }
         if (n == k) {
-            return -(funcs.LOG_NT) - n * Math.log10(p);
+            return -LOG_NT - n * Math.log10(p);
         }
         let pTerm = p / (1 - p);
         let log1Term = (n + 1) - funcs.logGamma(k + 1)
@@ -627,9 +627,9 @@ export default class LSD {
         let term = Math.exp(log1Term);
         if (funcs.doubleEqual(term, 0)) {
             if (k > n * p) {
-                return -log1Term / funcs.M_LN10 - funcs.LOG_NT;
+                return -log1Term / funcs.M_LN10 - LOG_NT;
             } else {
-                return -(funcs.LOG_NT);
+                return -LOG_NT;
             }
         }
         let binTail = term;
@@ -641,12 +641,12 @@ export default class LSD {
             binTail += term;
             if (binTerm < 1) {
                 let err = term * ((1 - Math.pow(multTerm, (n - i + 1))) / (1 - multTerm) - 1);
-                if (err < tolerance * Math.abs(-Math.log10(binTail) - funcs.LOG_NT) * binTail) {
+                if (err < tolerance * Math.abs(-Math.log10(binTail) - LOG_NT) * binTail) {
                     break;
                 }
             }
         }
-        return -Math.log10(binTail) - funcs.LOG_NT;
+        return -Math.log10(binTail) - LOG_NT;
     }
 
     gaussianBlur(imageData: Uint8ClampedArray, kSize: number, sigma: number) {
@@ -729,22 +729,6 @@ export default class LSD {
             reshaped[i] = src[i * 4];
         }
         return reshaped;
-    }
-
-    /**
-     * @param {ImageData} image
-     * @param {number} scale
-     * @return {ImageData}
-     */
-    resize(image: ImageData, scale: number) {
-        let ctx = document.createElement('canvas').getContext('2d'),
-            dstWidth = image.width * scale,
-            dstHeight = image.height * scale;
-        ctx!.canvas.width = dstWidth;
-        ctx!.canvas.height = dstHeight;
-        ctx!.drawImage(this.imageElement, 0, 0, image.width, image.height, 0, 0, dstWidth, dstHeight);
-        let resizedData = ctx!.getImageData(0, 0, dstWidth, dstHeight);
-        return resizedData;
     }
 
     at(data: Uint8Array|Float64Array, p: Point) {
