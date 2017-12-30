@@ -8,7 +8,7 @@ class Point {
 
 class CoorList {
     p: Point;
-    next?: CoorList;
+    next: CoorList | null;
 
     constructor() {
         this.p = new Point();

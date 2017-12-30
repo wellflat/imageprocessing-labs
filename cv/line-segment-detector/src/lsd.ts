@@ -101,7 +101,6 @@ export default class LSD {
             const sprec = 3;
             const h = Math.ceil(sigma * Math.sqrt(2 * sprec * Math.log(10.0)));
             const kSize = 1 + 2 * h;
-            //let resized = this.resize(this.image, this.scale);
             const reshaped = this.reshape(this.image);
             this.imageData = this.gaussianBlur(reshaped, kSize, sigma);
             this.computeLevelLineAngles(rho, this.nBins);
@@ -213,7 +212,7 @@ export default class LSD {
                     count++;
                 }
                 rangeE[i].p = new Point(x, y);
-                rangeE[i].next = 0;
+                rangeE[i].next = null;
             }
         }
         let idx = nBins - 1;
@@ -604,7 +603,7 @@ export default class LSD {
             if (y >= leftmost.p.y) {
                 lstep = slstep;
             }
-            if (y >= rightX.p.y) {
+            if (y >= rightmost.p.y) {
                 rstep = srstep;
             }
             leftX += lstep;
@@ -614,11 +613,12 @@ export default class LSD {
     }
 
     nfa(n: number, k: number, p: number) {
+        const LOG_NT =  5 * (Math.log10(this.width) + Math.log10(this.height)) / 2 + Math.log10(11.0);
         if (n == 0 || k == 0) {
-            return -(funcs.LOG_NT);
+            return -LOG_NT;
         }
         if (n == k) {
-            return -(funcs.LOG_NT) - n * Math.log10(p);
+            return -LOG_NT - n * Math.log10(p);
         }
         let pTerm = p / (1 - p);
         let log1Term = (n + 1) - funcs.logGamma(k + 1)
@@ -627,9 +627,9 @@ export default class LSD {
         let term = Math.exp(log1Term);
         if (funcs.doubleEqual(term, 0)) {
             if (k > n * p) {
-                return -log1Term / funcs.M_LN10 - funcs.LOG_NT;
+                return -log1Term / funcs.M_LN10 - LOG_NT;
             } else {
-                return -(funcs.LOG_NT);
+                return -LOG_NT;
             }
         }
         let binTail = term;
@@ -641,12 +641,12 @@ export default class LSD {
             binTail += term;
             if (binTerm < 1) {
                 let err = term * ((1 - Math.pow(multTerm, (n - i + 1))) / (1 - multTerm) - 1);
-                if (err < tolerance * Math.abs(-Math.log10(binTail) - funcs.LOG_NT) * binTail) {
+                if (err < tolerance * Math.abs(-Math.log10(binTail) - LOG_NT) * binTail) {
                     break;
                 }
             }
         }
-        return -Math.log10(binTail) - funcs.LOG_NT;
+        return -Math.log10(binTail) - LOG_NT;
     }
 
     gaussianBlur(imageData: Uint8ClampedArray, kSize: number, sigma: number) {
@@ -729,22 +729,6 @@ export default class LSD {
             reshaped[i] = src[i * 4];
         }
         return reshaped;
-    }
-
-    /**
-     * @param {ImageData} image
-     * @param {number} scale
-     * @return {ImageData}
-     */
-    resize(image: ImageData, scale: number) {
-        let ctx = document.createElement('canvas').getContext('2d'),
-            dstWidth = image.width * scale,
-            dstHeight = image.height * scale;
-        ctx!.canvas.width = dstWidth;
-        ctx!.canvas.height = dstHeight;
-        ctx!.drawImage(this.imageElement, 0, 0, image.width, image.height, 0, 0, dstWidth, dstHeight);
-        let resizedData = ctx!.getImageData(0, 0, dstWidth, dstHeight);
-        return resizedData;
     }
 
     at(data: Uint8Array|Float64Array, p: Point) {
