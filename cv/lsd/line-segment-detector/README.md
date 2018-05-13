@@ -15,6 +15,8 @@ see also [blog entry][entry]
 npm install line-segment-detector.js
 ```
 
+- Todo npm publish ready: add package.json, unit test
+
 ### demo
 [Line Segment Detector Demo](http://rest-term.com/labs/html5/lsd/index.html) [(mirror)](https://secret-nether-5891.herokuapp.com/lsd/)
 
