@@ -1,0 +1,30 @@
+{
+  "name": "t-sne",
+  "version": "1.0.0",
+  "description": "t-SNE JavaScript implementation sample",
+  "main": "dst",
+  "scripts": {
+    "dev": "nodemon -w src --exec \"babel-node src\"",
+    "build": "babel src -s -D -d dst",
+    "start": "node dst",
+    "prestart": "npm run -s build",
+    "debug": "npm run -s build && node --nolazy --inspect-brk=9229 dst",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wellflat/imageprocessing-labs"
+  },
+  "author": "wellflat",
+  "license": "MIT",
+  "keywords": [
+    "machine-learning"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "nodemon": "^1.19.1"
+  }
+}
