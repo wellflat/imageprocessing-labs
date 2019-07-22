@@ -1,0 +1,20 @@
+{
+    "extends": ["eslint:recommended"],
+    "plugins": [],
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 2019
+    },
+    "env": {
+        "browser": false,
+        "node": true,
+        "es6": true
+    },
+    "globals": {},
+    "rules": {
+        "semi": ["error", "always"],
+        "linebreak-style": [
+            "error", "unix"
+        ]
+    }
+}
