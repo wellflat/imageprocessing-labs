@@ -4,6 +4,7 @@
  * @author https://github.com/wellflat
  */
 export default class tSNE {
+
     /**
      * @param {number} dim
      * @param {number} perplexity
@@ -19,16 +20,17 @@ export default class tSNE {
         this.eta = eta;
         /** @type {number} */
         this.max_iter = max_iter;
+
+        this.init();
     }
 
     /**
      * @param {number[][]|Float64Array[]} X 
      */
     fit(X) {
-
     }
 
-    #init() {
+    init() {
 
     }
 }
