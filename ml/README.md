@@ -6,10 +6,10 @@ Machine Learning in JavaScript / TypeScript (+ AngularJS)
 
 ### list
 - [AROW](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/arow)
-- [Decision Tree](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/decisiontree.js)
-- [Denoising Autoencoders](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/da)
-- [K-Means++](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/kmeans.js)
-- [Logistic Regression](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/logistic_regression.ts)
+- [Decision Tree](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/decisiontree/decisiontree.js)
+- [Denoising Autoencoders](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/autoencoder)
+- [K-Means++](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/kmeans/kmeans.js)
+- [Logistic Regression](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/logistic_regression/logistic_regression.ts)
 - [SCW](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/scw)
 - [GBDT](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/gbdt)
 
