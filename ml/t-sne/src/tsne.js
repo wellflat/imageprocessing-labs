@@ -13,6 +13,7 @@ export default class tSNE {
     constructor(perplexity = 30, eta = 100, maxIter = 1000) {
         /** @type {number} */
         this.perplexity = perplexity;
+        //this.perplexity = 18;
         /** @type {number} */
         this.eta = eta;
         /** @type {number} */
@@ -23,12 +24,35 @@ export default class tSNE {
 
     /**
      * @param {number[][]|Float64Array[]} X 
+     * @return {Promise}
      */
     compute(X) {
+        return new Promise();
     }
 
     init() {
 
+    }
+
+    /**
+     * calculate L2 distance
+     * @param {Float64Array} x1 
+     * @param {Float64Array} x2 
+     */
+    calculateL2Distance(x1, x2) {
+        let distance = 0;
+        for(let i = 0; i < x1.length; i++) {
+            distance += (x1[i] - x2[i]) * (x1[i] - x2[i]);
+        }
+        return distance;
+    }
+
+    /**
+     * calculate pairwise distance
+     * @param {Float64Array} X 
+     */
+    calculatePairwiseDistance(X) {
+        //let dist = zeros
     }
 
     /**
