@@ -6,38 +6,33 @@
 export default class tSNE {
 
     /**
-     * @param {number} perplexity
-     * @param {number} eta
-     * @param {number} maxIter
+     * @param {number[][]|Float64Array[]} data
+     * @param {{perplexity:number, eta:number}} params
      */
-    constructor(perplexity = 30, eta = 100, maxIter = 1000) {
-        /** @type {number} */
-        this.perplexity = perplexity;
-        //this.perplexity = 18;
-        /** @type {number} */
-        this.eta = eta;
-        /** @type {number} */
-        this.maxIter = maxIter;
-
-        this.init();
+    constructor(data, params) {
+        /** @type {number[][]|Float64Array[]} */
+        this.data = data;
+        /** @type {{perplexity:number, eta:number}} */
+        this.params = params;
     }
 
     /**
-     * @param {number[][]|Float64Array[]} X 
+     * compute t-SNE projection
+     * @param {number} iterations
      * @return {Promise}
      */
-    compute(X) {
-        return new Promise();
-    }
-
-    init() {
-
+    compute(iterations) {
+        let Y = new Float64Array(this.data.length);
+        return new Promise((resolve, reject) => {
+            resolve(Y);
+        });
     }
 
     /**
      * calculate L2 distance
      * @param {Float64Array} x1 
      * @param {Float64Array} x2 
+     * @return {number}
      */
     calculateL2Distance(x1, x2) {
         let distance = 0;
@@ -49,33 +44,19 @@ export default class tSNE {
 
     /**
      * calculate pairwise distance
-     * @param {Float64Array} X 
-     */
-    calculatePairwiseDistance(X) {
-        //let dist = zeros
-    }
-
-    /**
-     * generate normally distributed random number array using Marsaglia polar method
-     * @param {number} n 
+     * @param {Float64Array[]} X
      * @return {Float64Array}
      */
-    generateRandom(n, mu, std) {
-        if (n % 2 != 0) {
-            throw new Error("n must be even number");
+    calculatePairwiseDistance(X) {
+        const N = X.length;
+        let distance = new Float64Array(N * N);
+        for(let i = 0; i < N; i++) {
+            for(let j = i + 1; j < N; j++) {
+                const l2 = this.calculateL2Distance(X[i], X[j]);
+                distance[i * N + j] = l2;
+                distance[j * N + i] = l2;
+            }
         }
-        const data = new Float64Array(n);
-        for(let i = 0; i < n; i+=2) {
-            let u, v, r;
-            do {
-                u = 2 * Math.random() - 1;
-                v = 2 * Math.random() - 1;
-                r = u * u + v * v;
-            } while (r === 0 || r >= 1);
-            const mul = Math.sqrt(-2 * Math.log(r) / r);
-            data[i] = mu + (mul * u) * std;
-            data[i + 1] = mu + (mul * v) * std;
-        }
-        return data;
+        return distance;
     }
 }
