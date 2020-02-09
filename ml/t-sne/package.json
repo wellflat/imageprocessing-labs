@@ -4,11 +4,9 @@
   "description": "t-SNE JavaScript implementation sample",
   "main": "dst",
   "scripts": {
-    "dev": "nodemon -w src --exec \"babel-node src\"",
     "build": "babel src -s -D -d dst --source-maps",
-    "prestart": "npm run -s build",
+    "prestart": "yarn build",
     "start": "node dst",
-    "debug": "npm run -s build && node --nolazy --inspect-brk=9229 dst",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,7 +23,6 @@
     "@babel/core": "^7.8.3",
     "@babel/node": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
-    "eslint": "^6.8.0",
-    "nodemon": "^1.19.4"
+    "eslint": "^6.8.0"
   }
 }

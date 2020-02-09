@@ -19,7 +19,7 @@ export default class tSNE {
     /**
      * compute t-SNE projection
      * @param {number} iterations
-     * @return {Promise}
+     * @return {Promise<Float64Array>}
      */
     compute(iterations) {
         let Y = new Float64Array(this.data.length);
