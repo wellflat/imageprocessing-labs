@@ -14,6 +14,15 @@ export default class tSNE {
         this.data = data;
         /** @type {{perplexity:number, eta:number}} */
         this.params = params;
+        this.init();
+    }
+
+    init() {
+        if (Array.isArray(this.data[0])) {
+            // convert typed array
+            const typed = this.data.map(e => new Float64Array(e));
+            this.data = typed;
+        }
     }
 
     /**
