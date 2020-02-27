@@ -14,6 +14,15 @@ export default class tSNE {
         this.data = data;
         /** @type {{perplexity:number, eta:number}} */
         this.params = params;
+        this.init();
+    }
+
+    init() {
+        if (Array.isArray(this.data[0])) {
+            // convert typed array
+            const typed = this.data.map(e => new Float64Array(e));
+            this.data = typed;
+        }
     }
 
     /**
@@ -58,5 +67,24 @@ export default class tSNE {
             }
         }
         return distance;
+    }
+
+    /**
+     * calculate perplexity
+     * @param {Float64Array} probs 
+     */
+    calculatePerplexity(probs) {
+        return probs.reduce(
+            (sum, p) => sum - (p > 1e-7 ? p*Math.log(p) : 0), 0
+        );
+    }
+
+    /**
+     * calcualte Kullback-Leibler Divergence (KLD)
+     * @param {number} p 
+     * @param {number} q 
+     */
+    calculateKLD(p, q) {
+        return p * Math.log(p/q);
     }
 }
