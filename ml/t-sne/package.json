@@ -4,7 +4,7 @@
   "description": "t-SNE JavaScript implementation sample",
   "main": "dst",
   "scripts": {
-    "build": "babel src -s -D -d dst --source-maps",
+    "build": "babel src -d dst -s -D",
     "prestart": "yarn build",
     "start": "node dst",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,10 +19,11 @@
     "machine-learning"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.8.3",
-    "@babel/core": "^7.8.3",
-    "@babel/node": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/node": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "core-js": "3",
     "eslint": "^6.8.0"
   }
 }
