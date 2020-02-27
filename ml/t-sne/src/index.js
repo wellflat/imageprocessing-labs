@@ -11,4 +11,3 @@ tsne.compute(1000).then(result => {
 });
 const result = tsne.compute(1000);
 console.log(result);
-console.log(1);
