@@ -39,90 +39,79 @@ export default class tSNE {
         // not yet impl.
         //
         const D = this.calculatePairwiseDistance(this.data);
-        //console.log(D);
-        //this.setP(D, this.params.perplexity);
+        const P = this.getP(D, this.params.perplexity);
+        this.Y = this.initialSolution();
         return new Promise((resolve, reject) => {
             resolve(this.Y);
         });
     }
 
     /**
-     * set p_(ij) = p_(j|i) + p_(i|j) / 2n
-     * @param {Float64Array[]} D pairwise distances
+     * p_(ij) = p_(j|i) + p_(i|j) / 2n
+     * @param {Float64Array} D pairwise distances
+     * @return {Float64Array} P_(ij)
      */
-    setP(D) {
+    getP(D) {
         const N = this.data.length;
-        const perpTarget = Math.log(this.params.perplexity);
+        const perp = this.params.perplexity;
         const P = new Float64Array(N * N);
         const condP = new Float64Array(N * N);
-        const tol = 1e-3, maxIter = 50;
+        const tol = 1e-3, maxIter = 100;
 
         // compute pairwise affinities p_(j|i) with perplexity
         for (let i = 0; i < N; i++) {
-            // todo: decompose into functions
             // binary search to find sigma
-            let lb = 0.0;
+            let lb = Number.NEGATIVE_INFINITY;
             let ub = Number.POSITIVE_INFINITY;
+            //let lb = 0.0;
+            //let ub = 1e+10;
             let sigma = 1.0;
             let searching = true, n = 0;
             while(searching) {
-                for (let j = 0; j < N; j++) {
-                    if (i === j) {
-                        condP[j * N + i] = 0.0;
-                    } else {
-                        condP[j * N + i] = Math.exp(-D[i * N + j] / (2.0 * sigma));
-                    }
-                }
-
-                let sum = 0.0;
-                for (let k = 0; k < N; k++) {
-                    if (i != k) {
-                        sum += condP[k * N + i];
-                    }
-                }
-                for (let j = 0; j < N; j++) {
-                    condP[j * N + i] /= sum;
-                }
-
-                // compute perplexity
-                let Hpi = 0.0;  // H(Pi) = -Σp_(j|i)log(p_(j|i))
-                for (let j = 0; j < N; j++) {
-                    if (i != j) {
-                        Hpi -= condP[j * N + i] * Math.log(condP[j * N + i]);
-                    }
-                }
-                let perpPi = Math.pow(2.0, Hpi);  // Perp(Pi) = 2^H(Pi)
-
-                if (perpPi < perpTarget) {
-                    ub = sigma;
-                    if(ub === Number.POSITIVE_INFINITY) {
-                        sigma = sigma * 2;
-                    } else {
-                        sigma = (sigma + ub) / 2;
-                    }
-                } else {
+                //sigma = (lb + ub) / 2.0;
+                this.calculateProbs(D, sigma, i, condP);
+                let perpPi = this.calculateEntropy(condP, i);
+                if (perpPi < perp) {
                     lb = sigma;
-                    if(lb === Number.NEGATIVE_INFINITY) {
-                        sigma = sigma / 2;
-                    } else {
-                        sigma = (sigma + lb) / 2;
-                    }
+                    sigma = ub === Number.POSITIVE_INFINITY ? sigma*2 : (sigma + ub) / 2;
+                } else {
+                    ub = sigma;
+                    sigma = lb === Number.NEGATIVE_INFINITY ? sigma/2 : (sigma + lb)/2;
                 }
-                console.log(`sigma^2 ${i}: ${lb}`);
-
-                n++;
+                if (Math.abs(perp - perpPi) < tol) {
+                    searching = false;
+                }
+                if (n++ > maxIter) {
+                    searching = false;
+                }
             }
-        } // end loop of i
+            console.log(`sigma ${i}: ${lb}`);
+            //if(i==10) return; //exit
+        }
 
-        // set p_(ij)
+        // p_(ij)
         for(let i=0; i<N; i++) {
             for(let j=0; j<N; j++) {
-                if(i!=j) {
+                if(i!==j) {
                     P[i*N + j] = (condP[i*N + j] + condP[j*N + i])/(2*N);
                 }
             }
         }
         return P;
+    }
+
+    // sample initial solution Y(0)
+    initialSolution() {
+        const N = this.data.length;
+        const dims = this.dims;
+        const Y = new Float64Array(N*dims);
+        for(let i=0; i<N; i++) {
+            const rand = generateRandom(dims, 0.0, 1e-3);
+            for(let j=0; j<dims; j++) {
+                Y[i*N + j] = rand[j];
+            }
+        }
+        return Y;
     }
 
     /**
@@ -164,49 +153,43 @@ export default class tSNE {
 
     /**
      * calculate entropy: H(Pi) = Σ-p_(j|i)log(p_(j|i))
-     * @param {Float64Array} probs
-     * @return {number}
+     * @param {Float64Array} probs probability
+     * @param {number} i index of sample
+     * @return {number} Perp(Pi) = 2^H(Pi)
      */
-    calculateEntropy(probs) {
-        return probs.reduce(
-            (sum, p) => sum - (p > 1e-7 ? p * Math.log(p) : 0), 0
-        );
+    calculateEntropy(probs, i) {
+        const N = this.data.length;
+        let Hpi = 0.0;
+        for (let j = 0; j < N; j++) {
+            if (i !== j) {
+                const p = probs[j*N+i];
+                Hpi -= p > 1e-7 ? p * Math.log(p) : 0;
+            }
+        }
+        return Math.pow(2.0, Hpi);  // Perp(Pi) = 2^H(Pi)
     }
 
     /**
-     * calculate gaussian probability: p_(i|j)
-     * @param {Float64Array} distances
-     * @param {number} sigma
-     * @return {number[]}
+     * calculate gaussian probability
+     * @param {Float64Array} D pairwise distances
+     * @param {number} sigma sigma
+     * @param {number} i index of sample
+     * @param {Float64Array} P output array
      */
-    calculateProbs(distances, sigma) {
+    calculateProbs(D, sigma, i, P) {
+        const N = this.data.length;
         let sum = 0.0;
-        const pij = distances.map(d => {
-            const prob = Math.exp(-d / (2.0 * sigma));
-            const currProb = d !== 0 ? prob : 0;  // p_(i|i) = 0
-            sum += currProb;
-            return currProb;
-        }).map(p => p/sum);
-        return pij;
-    }
-
-    /**
-     * perform binary search to find sigma
-     * @param {Float64Array[]} distances pairwise distances
-     * @param {number} i index of distance[i]
-     */
-    searchSigma(distances, i) {
-        const tol = 1e-3;
-        const maxIter = 50;
-        let lb = 0.0, ub = Number.POSITIVE_INFINITY;
-        let sigma = 1.0;
-        let isSearching = true;
-        let probs, entropy;
-        let n = 0;
-        while(isSearching) {
-            probs = this.calculateProbs()
-            n++;
-            //todo
+        for (let j = 0; j < N; j++) {
+            if (i === j) {
+                P[j * N + i] = 0.0;
+            } else {
+                const pj = Math.exp(-D[i * N + j] / (2.0 * sigma));
+                P[j * N + i] = pj;
+                sum += pj;
+            }
+        }
+        for (let j = 0; j < N; j++) {
+            P[j * N + i] /= sum;
         }
     }
 
