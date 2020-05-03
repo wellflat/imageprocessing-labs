@@ -24,3 +24,20 @@ export function generateRandom(n, mu, std) {
     }
     return data;
 }
+
+/**
+ * clone 2d-typed array
+ * @param {Float64Array[]} src
+ * @return {Float64Array[]}
+ */
+export function clone(src) {
+    const arr = [];
+    const N = src.length;
+    const dims = src[0].length;
+    for (let i = 0; i < N; i++) {
+        for (let j = 0; j < dims; j++) {
+            arr[i] = src[i].slice();
+        }
+    }
+    return arr;
+};

@@ -4,7 +4,7 @@ import { digits } from './digits_data';
 
 
 //console.log(digits);
-const params = {perplexity:5, eta: 100};
+const params = {perplexity:5, eta: 100, alpha: 0.5};
 //const typed = digits.data.map(e => new Float64Array(e));
 const tsne = new tSNE(digits.data, params);
 //const data = generateRandom(50, 0, 0.001);
