@@ -10,8 +10,8 @@ const tsne = new tSNE(digits.data, params);
 //const data = generateRandom(50, 0, 0.001);
 //console.log(data);
 //const tsne = new tSNE(data, params);
-
-tsne.compute(1000).then(result => {
+const iter = 500;
+tsne.compute(iter).then(result => {
     //console.log(result);
-    console.log('end');
+    console.log(result);
 });

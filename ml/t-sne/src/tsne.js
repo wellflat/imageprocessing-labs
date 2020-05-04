@@ -9,14 +9,17 @@ export default class tSNE {
 
     /**
      * @param {number[][]|Float64Array[]} data
-     * @param {{perplexity:number, eta:number}} params
+     * @param {{perplexity:number, eta:number, alpha:number}} params
      */
     constructor(data, params) {
-        /** @type {number[][]|Float64Array[]} */
+        /** @type {number[][]|Float64Array[]} input data */
         this.data = data;
+        /** @type {number} output dimention */
+        this.dims = 2;
         /** @type {{perplexity:number, eta:number, alpha:number}} */
         this.params = params;
-        this.dims = 2;  // mapping output dimention
+        /** @type {Float64Array[]} output embedding */
+        this.Y = null;
         this.init();
     }
 
@@ -26,8 +29,8 @@ export default class tSNE {
             const typed = this.data.map(e => new Float64Array(e));
             this.data = typed;
         }
-        /** @type {Float64Array[]} */
-        this.Y = null;
+        // check parameters
+        // todo
     }
 
     /**
@@ -35,50 +38,92 @@ export default class tSNE {
      * @param {number} iter max iterations
      * @return {Promise<Float64Array>}
      */
-    compute(iter) {
-        const N = this.data.length;
-        const dims = this.dims;
+    async compute(iter) {
         const D = this.calculatePairwiseDistance(this.data);
         const P = this.computeP(D, this.params.perplexity);
         this.Y = this.sampleInitialSolution();
-        const step = new Float64Array(N*dims);
-        const eta = this.params.eta;
-        let alpha = this.params.alpha;  // momentam
+        const step = new Float64Array(this.data.length*this.dims);
 
         for(let t=0; t<iter; t++) {
-            const Y = this.Y;
-            const newY = clone(Y);
-            const [cost, grad] = this.calculateCostGrad(Y, P, t);
-            // set Y(t)
-            if(t >= 250) {
-                alpha = 0.8;
-            }
-            const mean = new Float64Array(dims);
-            for (let i = 0; i < N; i++) {
-                for (let d = 0; d < dims; d++) {
-                    const id = i*dims + d;
-                    newY[i][d] = Y[i][d] - eta * grad[id] + alpha * step[id];
-                    step[id] = newY[i][d] - Y[i][d];
-                    mean[d] += newY[i][d];
-                }
-            }
-            this.Y = clone(newY);
-            for(let i=0; i<N; i++) {
-                for(let d=0; d<dims; d++) {
-                    this.Y[i][d] -= mean[d]/N;
-                }
-            }
-            if(t%100 === 0) {
-                console.log(`t=${t} : cost=${cost}`);
+           const cost = this.stepGradient(P, step, t);
+           if(t%100 === 0) {
+            console.log(`t=${t} : cost=${cost}`);
             }
         }
-        return new Promise((resolve, reject) => {
-            resolve(this.Y);
-        });
+        return this.Y;
     }
 
     /**
-     * p_(ij) = p_(j|i) + p_(i|j) / 2n
+     * step down gradient
+     * @param {Float64Array} P
+     * @param {Float64Array} step
+     * @return {number} cost
+     */
+    stepGradient(P, step, t) {
+        const N = this.data.length;
+        const dims = this.dims;
+        const Y = this.Y;
+        const newY = clone(Y);
+        const [cost, grad] = this.calculateCostGrad(Y, P, t);
+        const eta = this.params.eta;    // learning rate
+        let alpha = this.params.alpha;  // momentam
+        // step Y(t)
+        if (t >= 250) {
+            alpha = 0.8;
+        }
+        const meanY = new Float64Array(dims);
+        for (let i = 0; i < N; i++) {
+            for (let d = 0; d < dims; d++) {
+                const id = i * dims + d;
+                step[id] = alpha * step[id] - eta * grad[id];
+                newY[i][d] = Y[i][d] + step[id];
+                meanY[d] += newY[i][d];
+            }
+        }
+        this.Y = clone(newY);
+        for (let i = 0; i < N; i++) {
+            for (let d = 0; d < dims; d++) {
+                this.Y[i][d] -= meanY[d] / N;
+            }
+        }
+        return cost;
+    }
+
+    /**
+     * calculate cost and gradient using Kullback-Leibler Divergence (KLD)
+     * @param {Float64Array} Y
+     * @param {Float64Array} P
+     * @param {number} iter
+     * @return {[number, Float64Array]}
+     */
+    calculateCostGrad(Y, P, iter) {
+        // todo: early exaggeration
+        const N = Y.length;
+        const dims = this.dims;
+        const Q = this.computeQ(Y);
+        const grad = new Float64Array(N * dims);
+        //const earlyExag = iter < 100 ? 4 : 1;
+        // calculate KLD  Σ_iΣ_jp_ij*log(p_ij/q_ij)
+        let cost = 0.0;
+        const L2 = this.calculateL2Distance;
+        for (let i = 0; i < N; i++) {
+            for (let j = 0; j < N; j++) {
+                if (i !== j) {
+                    //const pij = P[i*N + j];
+                    //const qij = Q[i*N + j];
+                    cost += P[i * N + j] * Math.log(P[i * N + j] / Q[i * N + j]);
+                    let a = (P[i * N + j] - Q[i * N + j]) * (1.0 / (1.0 + L2(Y[i], Y[j])));
+                    for (let k = 0; k < dims; k++) {
+                        grad[i * dims + k] += 4.0 * a * (Y[i][k] - Y[j][k]);
+                    }
+                }
+            }
+        }
+        return [cost, grad];
+    }
+
+    /**
+     * set p_(ij) = p_(j|i) + p_(i|j) / 2n
      * @param {Float64Array} D pairwise distances
      * @return {Float64Array} P_(ij)
      */
@@ -87,6 +132,7 @@ export default class tSNE {
         const perp = this.params.perplexity;
         const P = new Float64Array(N * N);
         const condP = new Float64Array(N * N);
+        const D = this.calculatePairwiseDistance(this.data);
         const tol = 1e-3, maxIter = 100;
 
         // compute pairwise affinities p_(j|i) with perplexity
@@ -131,11 +177,11 @@ export default class tSNE {
     }
 
     /**
-     * find Q distribution q_(ij)
+     * compute low-dimensional affinities q_(ij)
      * @param {Float64Array[]} Y
      * @return {Float64Array}
      */
-    findQ(Y) {
+    computeQ(Y) {
         const N = Y.length;
         const Q = new Float64Array(N*N);
         let sum = 0.0;
@@ -252,34 +298,6 @@ export default class tSNE {
         }
     }
 
-    /**
-     * calculate cost and gradient using Kullback-Leibler Divergence (KLD)
-     * @param {Float64Array} Y
-     * @param {Float64Array} P
-     * @param {number} iter
-     * @return {[number, Float64Array]}
-     */
-    calculateCostGrad(Y, P, iter) {
-        // todo: early exaggeration
-        const N = Y.length;
-        const dims = this.dims;
-        const Q = this.findQ(Y);
-        const grad = new Float64Array(N * dims);
-        //const earlyExag = iter < 100 ? 4 : 1;
-        // calculate KLD  Σ_iΣ_jp_ij*log(p_ij/q_ij)
-        let cost = 0.0;
-        const L2 = this.calculateL2Distance;
-        for (let i = 0; i < N; i++) {
-            for (let j = 0; j < N; j++) {
-                if (i !== j) {
-                    cost += P[i * N + j] * Math.log(P[i * N + j] / Q[i * N + j]);
-                    let a = (P[i * N + j] - Q[i * N + j]) * (1.0 / (1.0 + L2(Y[i], Y[j])));
-                    for (let k = 0; k < dims; k++) {
-                        grad[i * dims + k] += 4.0 * a * (Y[i][k] - Y[j][k]);
-                    }
-                }
-            }
-        }
-        return [cost, grad];
-    }
+    
+    
 }
