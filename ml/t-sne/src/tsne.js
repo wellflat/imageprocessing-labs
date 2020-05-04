@@ -3,7 +3,7 @@
  * t-SNE Module
  * @author https://github.com/wellflat
  */
-import { generateRandom, clone } from './utils';
+import { clone } from './utils';
 
 export default class tSNE {
 
@@ -21,6 +21,8 @@ export default class tSNE {
         /** @type {Float64Array[]} output embedding */
         this.Y = null;
         this.init();
+        // internal debug
+        this.debug = true;
     }
 
     init() {
@@ -30,24 +32,26 @@ export default class tSNE {
             this.data = typed;
         }
         // check parameters
-        // todo
+        ['perplexity', 'eta', 'alpha'].forEach(p => {
+            if(!(p in this.params)) {
+                throw new Error(`parameter '${p}' required`);
+            }
+        });
     }
 
     /**
      * compute t-SNE projection
      * @param {number} iter max iterations
-     * @return {Promise<Float64Array>}
+     * @return {Promise<Float64Array[]>}
      */
     async compute(iter) {
-        const D = this.calculatePairwiseDistance(this.data);
-        const P = this.computeP(D, this.params.perplexity);
+        const P = this.computeP();
         this.Y = this.sampleInitialSolution();
         const step = new Float64Array(this.data.length*this.dims);
-
         for(let t=0; t<iter; t++) {
-           const cost = this.stepGradient(P, step, t);
-           if(t%100 === 0) {
-            console.log(`t=${t} : cost=${cost}`);
+            const cost = this.stepGradient(P, step, t);
+            if(this.debug && t%10 === 0) {
+               console.log(`t=${t} : cost=${cost}`);
             }
         }
         return this.Y;
@@ -102,18 +106,20 @@ export default class tSNE {
         const dims = this.dims;
         const Q = this.computeQ(Y);
         const grad = new Float64Array(N * dims);
-        //const earlyExag = iter < 100 ? 4 : 1;
+        const earlyExagValue = iter < 100 ? 4.0 : 1.0; //
         // calculate KLD  Σ_iΣ_jp_ij*log(p_ij/q_ij)
         let cost = 0.0;
         const L2 = this.calculateL2Distance;
         for (let i = 0; i < N; i++) {
             for (let j = 0; j < N; j++) {
                 if (i !== j) {
-                    //const pij = P[i*N + j];
-                    //const qij = Q[i*N + j];
+                    const pij = P[i*N + j];
+                    const qij = Q[i*N + j];
                     cost += P[i * N + j] * Math.log(P[i * N + j] / Q[i * N + j]);
                     let a = (P[i * N + j] - Q[i * N + j]) * (1.0 / (1.0 + L2(Y[i], Y[j])));
+                    //let earlyExag = 4.0 * (earlyExagValue*pij - qij*qij);
                     for (let k = 0; k < dims; k++) {
+                        //grad[i * dims + k] += earlyExag * a * (Y[i][k] - Y[j][k]);
                         grad[i * dims + k] += 4.0 * a * (Y[i][k] - Y[j][k]);
                     }
                 }
@@ -123,11 +129,11 @@ export default class tSNE {
     }
 
     /**
+     * compute pairwise affinities p_(j|i) with perplexity
      * set p_(ij) = p_(j|i) + p_(i|j) / 2n
-     * @param {Float64Array} D pairwise distances
      * @return {Float64Array} P_(ij)
      */
-    computeP(D) {
+    computeP() {
         const N = this.data.length;
         const perp = this.params.perplexity;
         const P = new Float64Array(N * N);
@@ -135,17 +141,13 @@ export default class tSNE {
         const D = this.calculatePairwiseDistance(this.data);
         const tol = 1e-3, maxIter = 100;
 
-        // compute pairwise affinities p_(j|i) with perplexity
         for (let i = 0; i < N; i++) {
             // binary search to find sigma
             let lb = Number.NEGATIVE_INFINITY;
             let ub = Number.POSITIVE_INFINITY;
-            //let lb = 0.0;
-            //let ub = 1e+10;
             let sigma = 1.0;
             let searching = true, n = 0;
             while(searching) {
-                //sigma = (lb + ub) / 2.0;
                 this.calculateProbs(D, sigma, i, condP);
                 let perpPi = this.calculateEntropy(condP, i);
                 if (perpPi < perp) {
@@ -162,7 +164,9 @@ export default class tSNE {
                     searching = false;
                 }
             }
-            console.log(`sigma ${i}: ${lb}`);
+            if(this.debug) {
+                console.log(`sigma ${i}: ${lb}`);
+            }
         }
 
         // p_(ij)
@@ -174,6 +178,48 @@ export default class tSNE {
             }
         }
         return P;
+    }
+
+    /**
+     * calculate entropy: H(Pi) = Σ-p_(j|i)log(p_(j|i))
+     * @param {Float64Array} probs probability
+     * @param {number} i index of sample
+     * @return {number} Perp(Pi) = 2^H(Pi)
+     */
+    calculateEntropy(probs, i) {
+        const N = this.data.length;
+        let Hpi = 0.0;
+        for (let j = 0; j < N; j++) {
+            if (i !== j) {
+                const p = probs[j*N+i];
+                Hpi -= p > 1e-7 ? p * Math.log(p) : 0;
+            }
+        }
+        return 2**Hpi; //Math.pow(2.0, Hpi);  // Perp(Pi) = 2^H(Pi)
+    }
+
+    /**
+     * calculate gaussian probability
+     * @param {Float64Array} D pairwise distances
+     * @param {number} sigma sigma
+     * @param {number} i index of sample
+     * @param {Float64Array} P output array
+     */
+    calculateProbs(D, sigma, i, P) {
+        const N = this.data.length;
+        let sum = 0.0;
+        for (let j = 0; j < N; j++) {
+            if (i === j) {
+                P[j * N + i] = 0.0;
+            } else {
+                const pj = Math.exp(-D[i * N + j] / (2.0 * sigma));
+                P[j * N + i] = pj;
+                sum += pj;
+            }
+        }
+        for (let j = 0; j < N; j++) {
+            P[j * N + i] /= sum;
+        }
     }
 
     /**
@@ -215,13 +261,39 @@ export default class tSNE {
         const Y = [];
         for(let i=0; i<N; i++) {
             const yrow = new Float64Array(dims);
-            const rand = generateRandom(dims, 0.0, 1e-3);
+            const rand = this.generateRandom(dims, 0.0, 1e-3);
             for(let j=0; j<dims; j++) {
                 yrow[j] = rand[j];
             }
             Y[i] = yrow;
         }
         return Y;
+    }
+
+    /**
+     * generate normally distributed random number array using Marsaglia polar method
+     * @param {number} n
+     * @param {number} mu
+     * @param {number} std
+     * @return {Float64Array}
+    */
+    generateRandom(n, mu, std) {
+        if (n % 2 != 0) {
+            throw new TypeError("n must be even number");
+        }
+        const data = new Float64Array(n);
+        for (let i = 0; i < n; i += 2) {
+            let u, v, r;
+            do {
+                u = 2 * Math.random() - 1;
+                v = 2 * Math.random() - 1;
+                r = u * u + v * v;
+            } while (r === 0 || r >= 1);
+            const mul = Math.sqrt(-2 * Math.log(r) / r);
+            data[i] = mu + (mul * u) * std;
+            data[i + 1] = mu + (mul * v) * std;
+        }
+        return data;
     }
 
     /**
@@ -255,49 +327,4 @@ export default class tSNE {
         }
         return distance;
     }
-
-    /**
-     * calculate entropy: H(Pi) = Σ-p_(j|i)log(p_(j|i))
-     * @param {Float64Array} probs probability
-     * @param {number} i index of sample
-     * @return {number} Perp(Pi) = 2^H(Pi)
-     */
-    calculateEntropy(probs, i) {
-        const N = this.data.length;
-        let Hpi = 0.0;
-        for (let j = 0; j < N; j++) {
-            if (i !== j) {
-                const p = probs[j*N+i];
-                Hpi -= p > 1e-7 ? p * Math.log(p) : 0;
-            }
-        }
-        return Math.pow(2.0, Hpi);  // Perp(Pi) = 2^H(Pi)
-    }
-
-    /**
-     * calculate gaussian probability
-     * @param {Float64Array} D pairwise distances
-     * @param {number} sigma sigma
-     * @param {number} i index of sample
-     * @param {Float64Array} P output array
-     */
-    calculateProbs(D, sigma, i, P) {
-        const N = this.data.length;
-        let sum = 0.0;
-        for (let j = 0; j < N; j++) {
-            if (i === j) {
-                P[j * N + i] = 0.0;
-            } else {
-                const pj = Math.exp(-D[i * N + j] / (2.0 * sigma));
-                P[j * N + i] = pj;
-                sum += pj;
-            }
-        }
-        for (let j = 0; j < N; j++) {
-            P[j * N + i] /= sum;
-        }
-    }
-
-    
-    
 }

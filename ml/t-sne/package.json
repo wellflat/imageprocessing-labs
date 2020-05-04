@@ -1,7 +1,7 @@
 {
   "name": "t-sne",
   "version": "1.0.0",
-  "description": "t-SNE JavaScript implementation sample",
+  "description": "t-SNE JavaScript implementation",
   "main": "dst",
   "scripts": {
     "build": "babel src -d dst -s -D",

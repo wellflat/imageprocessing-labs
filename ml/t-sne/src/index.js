@@ -1,17 +1,18 @@
 import tSNE from './tsne';
-import { generateRandom } from './utils';
 import { digits } from './digits_data';
+import { writeResult } from './utils';
 
-
-//console.log(digits);
-const params = {perplexity:5, eta: 100, alpha: 0.5};
-//const typed = digits.data.map(e => new Float64Array(e));
+console.log(digits.target);
+const params = {perplexity:30, eta: 100, alpha: 0.5};
 const tsne = new tSNE(digits.data, params);
-//const data = generateRandom(50, 0, 0.001);
-//console.log(data);
+
 //const tsne = new tSNE(data, params);
-const iter = 500;
+const iter = 100;
+
 tsne.compute(iter).then(result => {
     //console.log(result);
     console.log(result);
+    writeResult('output.txt', result);
 });
+
+//const result = await tsne.compute(iter);
