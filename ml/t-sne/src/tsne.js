@@ -41,7 +41,7 @@ export default class tSNE {
 
     /**
      * compute t-SNE projection
-     * @param {number} iter max iterations
+     * @param {number} iter max iteration
      * @return {Promise<Float64Array[]>}
      */
     async compute(iter) {
@@ -55,6 +55,23 @@ export default class tSNE {
             }
         }
         return this.Y;
+    }
+
+    /**
+     * t-SNE projection iterator version
+     * @param {number} iter max iteration
+     */
+    *iterator(iter) {
+        const P = this.computeP();
+        this.Y = this.sampleInitialSolution();
+        const step = new Float64Array(this.data.length*this.dims);
+        for(let t=0; t<iter; t++) {
+            const cost = this.stepGradient(P, step, t);
+            if(this.debug && t%10 === 0) {
+               console.log(`t=${t} : cost=${cost}`);
+            }
+            yield this.Y;
+        }
     }
 
     /**
