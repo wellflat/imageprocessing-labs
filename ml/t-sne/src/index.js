@@ -1,8 +1,6 @@
 import tSNE from './tsne';
 import { digits } from './digits_data';
-import { writeResult } from './utils';
 
-console.log(digits.target);
 const params = {perplexity:30, eta: 100, alpha: 0.5};
 const tsne = new tSNE(digits.data, params);
 
@@ -18,7 +16,7 @@ tsne.compute(iter).then(result => {
 const it = tsne.iterator(iter);
 let step = it.next();
 while(!step.done) {
-    console.log(step.value);
+    //console.log(step.value);
     step = it.next();
 }
 //const result = await tsne.compute(iter);
