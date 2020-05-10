@@ -1,6 +1,7 @@
 # t-SNE Module
-==============
-## t-SNE (t-Distributed Stochastic Neighbor Embedding) implementation
+
+## description
+t-SNE (t-Distributed Stochastic Neighbor Embedding) implementation
 
 ## usage in JavaScript (ES2017)
 ```js
