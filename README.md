@@ -20,6 +20,7 @@ computer vision, image processing and machine learning on the web browser or nod
 * Soft Confidence Weighted Learning (SCW)
 * Gradient Boosting Decision Tree (GBDT)
 * Neural Network (Denoising Autoencoders)
+* t-Distributed Stochastic Neighbor Embedding (t-SNE)
 * 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface ...)
 * WebGL Samples
 * etc..
