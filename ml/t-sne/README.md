@@ -27,3 +27,6 @@ while(!step.done) {
     step = it.next();
 }
 ```
+
+## demo tool
+[t-SNE projection visualizer](https://rest-term.com/labs/html5/tsne/)
