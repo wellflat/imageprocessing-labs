@@ -12,17 +12,18 @@ Machine Learning in JavaScript / TypeScript (+ AngularJS)
 - [Logistic Regression](https://github.com/wellflat/imageprocessing-labs/blob/master/ml/logistic_regression/logistic_regression.ts)
 - [SCW](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/scw)
 - [Gradient Boosting(GBDT)](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/gbdt)
+- [t-Distributed Stochastic Neighbor Embedding(t-SNE)](https://github.com/wellflat/imageprocessing-labs/tree/master/ml/t-sne)
 
 ### sample
-[![da](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/da_demo.png)](http://rest-term.com/labs/html5/da/)
+[![da](https://github.com/wellflat/imageprocessing-labs/blob/master/images/da_demo.png)](https://rest-term.com/labs/html5/da/)
 
-(Tests: Firefox40.0, Chrome44.0)
+[![pixel_clustering](https://github.com/wellflat/imageprocessing-labs/blob/master/images/pixel_clustering.jpg)](https://rest-term.com/labs/html5/pixelclustering.html)
 
-[![pixel_clustering](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/pixel_clustering.jpg)](http://rest-term.com/labs/html5/pixelclustering.html)
+[![decision_tree](https://github.com/wellflat/imageprocessing-labs/blob/master/images/decision_tree.png)](https://rest-term.com/labs/html5/dtree.html)
 
-[![decision_tree](https://raw.github.com/wiki/wellflat/imageprocessing-labs/images/decision_tree.png)](http://rest-term.com/labs/html5/dtree.html)
+[![t-sne](https://github.com/wellflat/imageprocessing-labs/blob/master/images/tsne.png)](https://rest-term.com/labs/html5/tsne/)
 
-(Tests: IE10, Firefox23.0, Chrome28.0, Safari6.0)
+(Tests: Firefox75.0+, Chrome81.0+)
 
 ### web sample
 [Denoising Autoencoders][DenoisingAutoencoders]
