@@ -32,6 +32,8 @@ Machine Learning in JavaScript / TypeScript (+ AngularJS)
 
 [Decision Tree Learning][DecisionTree]
 
+[t-Distributed Stochastic Neighbor Embedding(t-SNE)][tSNE]
+
 license
 ----------
 Copyright &copy; 2014 wellflat Licensed under the [MIT License][MIT]
@@ -39,4 +41,5 @@ Copyright &copy; 2014 wellflat Licensed under the [MIT License][MIT]
 [DenoisingAutoencoders]: http://rest-term.com/labs/html5/da/
 [PixelClustering]: http://rest-term.com/labs/html5/pixelclustering.html
 [DecisionTree]: http://rest-term.com/labs/html5/dtree.html
+[tSNE]: https://rest-term.com/labs/html5/tsne/
 [MIT]: http://www.opensource.org/licenses/mit-license.php
