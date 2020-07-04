@@ -36,6 +36,6 @@ $ yarn start
 ```
 
 ## demo tool
-* [t-SNE projection visualizer](https://rest-term.com/labs/html5/tsne/)
+* [t-SNE projection visualizer](https://rest-term.com/labs/html5/tsne/)  
 [![tsne_projection_visualizer](https://github.com/wellflat/imageprocessing-labs/blob/master/images/tsne.png)](https://rest-term.com/labs/html5/tsne/)
 * [vue-chart-sample](https://github.com/wellflat/vue-chart-sample)
