@@ -1,3 +1,7 @@
+/**
+ * t-SNE module usage, sample code
+ */
+
 import tSNE from './tsne';
 import { digits } from './digits_data';
 

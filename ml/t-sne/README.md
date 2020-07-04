@@ -12,14 +12,15 @@ const params = { perplexity: 30, eta: 100, alpha: 0.5 };  // parameters
 const tsne = new tSNE(digits.data, params);
 const maxIter = 1000;  // max iteration
 
-// Promise version
+// 1. Promise version
 tsne.compute(maxIter).then(result => {
     console.log(result);  // result: Float64Array[]
 });
-// async/await
+
+// 2. async/await
 const result = await tsne.compute(maxIter);
 
-// generator version
+// 3. generator version
 const it = tsne.iterator(maxIter);
 let step = it.next();  // step down gradient
 while(!step.done) {
@@ -28,5 +29,12 @@ while(!step.done) {
 }
 ```
 
+run sample code (see also src/index.js)
+```
+$ yarn install
+$ yarn start
+```
+
 ## demo tool
-[t-SNE projection visualizer](https://rest-term.com/labs/html5/tsne/)
+* [t-SNE projection visualizer](https://rest-term.com/labs/html5/tsne/)
+* [vue-chart-sample](https://github.com/wellflat/vue-chart-sample)
