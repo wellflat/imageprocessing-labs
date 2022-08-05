@@ -23,6 +23,7 @@ computer vision, image processing and machine learning on the web browser or nod
 * t-Distributed Stochastic Neighbor Embedding (t-SNE)
 * 3D Shape Drawing (Mobius Strip, Klein Bottle, Heart Surface ...)
 * WebGL Samples
+* ONNX Runtime for Web (ORT Web)
 * etc..
 
 ### demo
