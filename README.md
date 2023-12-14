@@ -27,7 +27,7 @@ computer vision, image processing and machine learning on the web browser or nod
 * etc..
 
 ### demo
-[Demo Site](http://rest-term.com/labs/html5/index.html) [(mirror)](https://secret-nether-01.herokuapp.com/)
+[Demo Site](https://rest-term.com/labs/html5/index.html) 
 
 ### license
 
